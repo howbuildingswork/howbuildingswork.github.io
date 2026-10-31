@@ -147,6 +147,9 @@ footer p { margin: 0; max-width: 90ch; }
 .glabel { display: flex; justify-content: space-between; font-size: 11px; opacity: .75; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
+.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
+footer a { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -211,6 +214,7 @@ footer p { margin: 0; max-width: 90ch; }
       <h2 id="res-h">The answer</h2>
       <span class="status" id="status"></span>
       <p class="big" id="big"></p>
+      <p class="note"><strong>Estimate, not an inspection or design.</strong> Based on ENERGY STAR capacity range data shown below; your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
       <div class="facts" id="facts"></div>
       <div class="gauge" id="gauge"></div>
       <p class="say" id="say"></p>
@@ -221,6 +225,7 @@ footer p { margin: 0; max-width: 90ch; }
       </div>
       <div id="products-wrap">
         <h2>What helps <span class="paid">(paid links)</span></h2>
+        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
         <div class="products" id="products" style="margin-top:8px"></div>
       </div>
       <div class="funnel" id="funnel"></div>
@@ -229,7 +234,7 @@ footer p { margin: 0; max-width: 90ch; }
 
   <section class="panel" aria-labelledby="tbl-h">
     <h2 id="tbl-h">The sizing chart behind it</h2>
-    <p class="say">ENERGY STAR's recommended capacity, in pints per day on today's labels. Your row is shaded.</p>
+    <p class="say">ENERGY STAR's recommended capacity, in pints per day on today's labels (as of 2026). Your row is shaded.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Condition</th><th>Under 2,000 sq ft</th><th>Over 2,000 sq ft</th></tr></thead>
@@ -239,9 +244,11 @@ footer p { margin: 0; max-width: 90ch; }
   </section>
 
   <footer>
-    <p>How it works: sizes come from ENERGY STAR's recommended capacity ranges. Under 500 sq ft the tool uses the low end of the range; from 500 to 2,000 sq ft it uses the high end, because basements run cool and cool air cuts what any unit really removes; over 2,000 sq ft it scales up with area. Ceilings over 8 ft add proportionally. Then it picks the next common size: 22, 35 or 50 pints. Today's labels use the DOE's 2019 test, so an older "70-pint" unit is about a 50 on today's scale.</p>
-    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>How it works: sizes come from ENERGY STAR's recommended capacity ranges (as of 2026). Under 500 sq ft the tool uses the low end of the range; from 500 to 2,000 sq ft it uses the high end, because basements run cool and cool air cuts what any unit really removes; over 2,000 sq ft it scales up with area. Ceilings over 8 ft add proportionally. Then it picks the next common size: 22, 35 or 50 pints. Today's labels use the DOE's 2019 test, so an older "70-pint" unit is about a 50 on today's scale.</p>
+    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. The EPA suggests calling a professional for mold covering more than about 10 square feet.</p>
+    <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
+    <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
   </footer>
 </div>
 

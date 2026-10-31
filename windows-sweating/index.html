@@ -172,6 +172,9 @@ footer a { color: var(--ink); }
 
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
+.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
+footer a { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -234,6 +237,7 @@ footer a { color: var(--ink); }
       <h2 id="res-h">The answer</h2>
       <span class="status" id="status">Too humid</span>
       <p class="big" id="big"></p>
+      <p class="note"><strong>Estimate, not an inspection or design.</strong> Based on U of MN data shown below; your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
       <div class="figure" id="figure"></div>
       <p class="say" id="say"></p>
       <p class="sweat" id="sweat" hidden></p>
@@ -255,6 +259,7 @@ footer a { color: var(--ink); }
 
       <div id="products-wrap">
         <h2>What helps <span class="paid">(paid links)</span></h2>
+        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
         <div class="products" id="products" style="margin-top:8px"></div>
       </div>
 
@@ -283,8 +288,10 @@ footer a { color: var(--ink); }
 
   <footer>
     <p>How it works: the limits come from the University of Minnesota's cold-climate table (W. J. Angell, "Indoor Winter Relative Humidity: What Is Acceptable?", Minnesota Extension Service, 1988), measured at 70°F inside with a 15 mph wind. The tool turns that table into a glass-surface temperature, so it still works when your thermostat isn't at 70. Deep window wells, closed blinds and heavy curtains keep warm air off the glass and make it sweat sooner.</p>
-    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. Rot, mold or water inside walls needs a professional.</p>
+    <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
+    <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
   </footer>
 </div>
 

@@ -149,6 +149,9 @@ td { vertical-align: top; }
 #plan td, .table-wrap th { text-align: left; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
+.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
+footer a { color: var(--ink); }
 </style>
 </head>
 <body>
@@ -191,6 +194,7 @@ td { vertical-align: top; }
       <h2 id="res-h">Your shopping list</h2>
       <span class="status s-short" id="status">At risk</span>
       <p class="big" id="big"></p>
+      <p class="note"><strong>Estimate, not an inspection or design.</strong> Based on U of Illinois data shown below; your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
       <div class="facts" id="facts"></div>
       <div class="figure" id="figure"></div>
       <p class="say" id="say"></p>
@@ -207,6 +211,7 @@ td { vertical-align: top; }
       </div>
       <div id="products-wrap">
         <h2>What helps <span class="paid">(paid links)</span></h2>
+        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
         <div class="products" id="products" style="margin-top:8px"></div>
       </div>
       <div class="funnel" id="funnel"></div>
@@ -218,6 +223,7 @@ td { vertical-align: top; }
       <h2 id="o-h">Right now</h2>
       <span class="status s-stop" id="o-status">Act fast</span>
       <p class="big" id="o-big"></p>
+      <p class="note"><strong>Estimate, not an inspection or design.</strong> Based on U of Illinois data shown below; your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
       <p class="say" id="o-say"></p>
       <ol class="fixes" id="o-steps"></ol>
       <p class="callout" id="o-callout"></p>
@@ -225,6 +231,7 @@ td { vertical-align: top; }
     <section class="result-col panel">
       <div id="o-products-wrap">
         <h2>What helps <span class="paid">(paid links)</span></h2>
+        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
         <div class="products" id="o-products" style="margin-top:8px"></div>
       </div>
       <div class="funnel" id="o-funnel"></div>
@@ -233,8 +240,10 @@ td { vertical-align: top; }
 
   <footer>
     <p>How it works: research by the University of Illinois Building Research Council found that unprotected pipes in unheated spaces start to freeze when it's 20°F or colder outside, and sooner with wind or drafts. Pipes usually burst downstream of the ice, where pressure builds between the ice plug and a closed faucet, which is why a dripping faucet helps. Foam sleeves are counted in 6-foot lengths; heat cable is matched to the next common cable length at or above each run. Follow the cable's own instructions and plug it into a GFCI outlet.</p>
-    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not a plumbing inspection. If water won't come out or a pipe has split, shut off the main and call a plumber.</p>
+    <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
+    <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
   </footer>
 </div>
 
