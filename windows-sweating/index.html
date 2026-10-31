@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why Are My Windows Sweating?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* How Buildings Work channel palette: drafting ink on cream trace paper */
+  --paper: #F3EFE4;
+  --ink: #25262A;
+  --red: #C4362C;
+  --green: #3D9461;
+  --blue: #3F7FBF;
+  --rule: rgba(37, 38, 42, 0.16);
+  --wash: rgba(63, 127, 191, 0.10);
+  --font: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* layout: one drafting sheet; inputs and result side by side on desktop, result first on phones */
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.sheet {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  display: grid;
+  gap: 18px;
+}
+header { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; font-weight: 400; text-wrap: balance; }
+.lede { margin: 0; max-width: 62ch; }
+
+.layout { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.result-col { order: -1; }
+@media (min-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+  .result-col { order: 0; position: sticky; top: 16px; }
+}
+
+.panel {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+.panel h2 { font-size: 13px; letter-spacing: 0.12em; margin: 0; font-weight: 400; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+legend, .field-label { font-size: 13px; letter-spacing: 0.1em; padding: 0; margin-bottom: 6px; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.chip input, .wtype input { position: absolute; opacity: 0; pointer-events: none; }
+.chip label, .wtype label {
+  display: block; cursor: pointer;
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  padding: 9px 10px; background: var(--paper);
+  transition: background 0.12s, color 0.12s;
+}
+.chip label { text-align: center; font-size: 14px; }
+.chip input:checked + label, .wtype input:checked + label { background: var(--ink); color: var(--paper); }
+.chip input:focus-visible + label, .wtype input:focus-visible + label { outline: 3px solid var(--blue); outline-offset: 2px; }
+.wtypes { display: grid; gap: 8px; }
+.wtype label { display: grid; gap: 1px; }
+.wtype .wname { font-size: 14px; }
+.wtype .wsub { font-size: 12px; opacity: 0.75; }
+
+.slider-row { display: grid; gap: 6px; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.readout { font-size: 26px; line-height: 1; }
+input[type="range"] { width: 100%; accent-color: var(--ink); height: 28px; }
+input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.scale { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.7; }
+.inline-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.inline-check input { width: 18px; height: 18px; accent-color: var(--ink); }
+.indoor-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--ink); border-radius: 3px; }
+.stepper button {
+  font: inherit; background: none; border: 0; color: var(--ink);
+  width: 36px; height: 36px; cursor: pointer; font-size: 18px;
+}
+.stepper button:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+.stepper output { min-width: 56px; text-align: center; font-size: 18px; }
+.muted { opacity: 0.7; font-size: 13px; }
+
+/* result */
+.status {
+  justify-self: start;
+  border: 2px solid currentColor; border-radius: 3px;
+  padding: 3px 10px; font-size: 14px; letter-spacing: 0.12em;
+}
+.s-high { color: var(--red); }
+.s-low { color: var(--blue); }
+.s-ok, .s-outside { color: var(--green); }
+.s-target { color: var(--ink); }
+.s-seal { color: var(--red); }
+.big { font-size: 40px; line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+.big .num { font-size: 56px; }
+.say { margin: 0; max-width: 60ch; }
+.sweat { margin: 0; padding: 8px 10px; border-left: 4px solid var(--red); background: rgba(196, 54, 44, 0.07); }
+.sweat.calm { border-left-color: var(--green); background: rgba(61, 148, 97, 0.08); }
+
+.figure { border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.35); border-radius: 3px; }
+.figure svg { display: block; width: 100%; height: auto; }
+
+.meter { display: grid; gap: 4px; }
+.bar { position: relative; height: 18px; border: 1.5px solid var(--ink); border-radius: 2px; overflow: hidden; display: flex; }
+.bar span { display: block; height: 100%; }
+.bar .dry { background: rgba(63, 127, 191, 0.35); }
+.bar .good { background: rgba(61, 148, 97, 0.40); }
+.bar .wet { background: rgba(196, 54, 44, 0.40); }
+.pin { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--ink); transform: translateX(-1.5px); }
+.meter-scale { position: relative; height: 16px; font-size: 11px; }
+.meter-scale span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.meter-key { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; }
+.meter-key i { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--ink); margin-right: 5px; vertical-align: -1px; }
+
+.fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+
+.products { display: grid; gap: 8px; }
+.product {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
+  color: var(--ink); text-decoration: none; background: var(--paper);
+}
+.product:hover { background: rgba(37, 38, 42, 0.05); }
+.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.product .pname { font-size: 15px; }
+.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
+.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+.paid { font-size: 11px; opacity: 0.7; }
+
+.funnel { display: grid; gap: 10px; }
+.btn {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--ink); color: var(--paper); text-decoration: none;
+  border-radius: 3px; padding: 12px 14px; font-size: 15px;
+}
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.btn small { font-size: 12px; opacity: 0.8; }
+.teaser { border: 1.5px dashed var(--ink); border-radius: 3px; padding: 10px 12px; font-size: 13px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { border-bottom: 1px solid var(--rule); padding: 5px 6px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 400; letter-spacing: 0.08em; border-bottom: 1.5px solid var(--ink); }
+tr.here td { background: rgba(37, 38, 42, 0.08); }
+.table-wrap { overflow-x: auto; }
+
+footer { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: 12px; }
+footer p { margin: 0; max-width: 90ch; }
+footer a { color: var(--ink); }
+
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="eyebrow">How Buildings Work · Free tool</div>
+    <h1>Why are my windows sweating?</h1>
+    <p class="lede">Tell it how cold it is and what windows you have. It gives you the highest indoor humidity your glass can take before it gets wet.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h">Your house tonight</h2>
+
+      <fieldset>
+        <legend>Where is the water?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="water" id="w-inside" value="inside" checked><label for="w-inside">Inside of the glass</label></div>
+          <div class="chip"><input type="radio" name="water" id="w-between" value="between"><label for="w-between">Between the panes</label></div>
+          <div class="chip"><input type="radio" name="water" id="w-outside" value="outside"><label for="w-outside">Outside of the glass</label></div>
+          <div class="chip"><input type="radio" name="water" id="w-none" value="none"><label for="w-none">No water yet</label></div>
+        </div>
+      </fieldset>
+
+      <div class="slider-row">
+        <div class="slider-head">
+          <label class="field-label" for="t-out">Outdoor temperature</label>
+          <output class="readout" id="t-out-read" for="t-out">0°F</output>
+        </div>
+        <input type="range" id="t-out" min="-30" max="50" step="1" value="0">
+        <div class="scale"><span>-30°F</span><span>0°F</span><span>50°F</span></div>
+      </div>
+
+      <fieldset>
+        <legend>What windows do you have?</legend>
+        <div class="wtypes" id="wtypes"></div>
+      </fieldset>
+
+      <div class="slider-row">
+        <div class="slider-head">
+          <label class="field-label" for="rh">Indoor humidity right now</label>
+          <output class="readout" id="rh-read" for="rh">40%</output>
+        </div>
+        <input type="range" id="rh" min="10" max="70" step="1" value="40">
+        <div class="scale"><span>10%</span><span>40%</span><span>70%</span></div>
+        <label class="inline-check" for="rh-unknown"><input type="checkbox" id="rh-unknown"> I don't know my humidity</label>
+      </div>
+
+      <div class="indoor-row">
+        <span class="field-label" id="t-in-label" style="margin:0">Thermostat</span>
+        <div class="stepper" role="group" aria-labelledby="t-in-label">
+          <button type="button" id="t-in-down" aria-label="Lower indoor temperature">−</button>
+          <output id="t-in-read" aria-live="polite">70°F</output>
+          <button type="button" id="t-in-up" aria-label="Raise indoor temperature">+</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="result-col panel" aria-live="polite" aria-labelledby="res-h">
+      <h2 id="res-h">The answer</h2>
+      <span class="status" id="status">Too humid</span>
+      <p class="big" id="big"></p>
+      <div class="figure" id="figure"></div>
+      <p class="say" id="say"></p>
+      <p class="sweat" id="sweat" hidden></p>
+
+      <div class="meter" id="meter">
+        <div class="bar" id="bar"></div>
+        <div class="meter-scale" id="meter-scale"></div>
+        <div class="meter-key">
+          <span><i style="background:rgba(63,127,191,.35)"></i>Too dry</span>
+          <span><i style="background:rgba(61,148,97,.40)"></i>Safe for this glass</span>
+          <span><i style="background:rgba(196,54,44,.40)"></i>Wet glass</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 id="fix-h">What to do</h2>
+        <ul class="fixes" id="fixes" aria-labelledby="fix-h"></ul>
+      </div>
+
+      <div id="products-wrap">
+        <h2>What helps <span class="paid">(paid links)</span></h2>
+        <div class="products" id="products" style="margin-top:8px"></div>
+      </div>
+
+      <div class="funnel">
+        <a class="btn" id="ep-link" href="#" rel="noopener">
+          <span>Watch: Why your windows sweat in winter</span><small id="ep-note">Episode 6</small>
+        </a>
+        <a class="btn" id="explorer-link" href="#" rel="noopener" hidden>
+          <span>Explore every layer of a house</span><small>House Anatomy Explorer</small>
+        </a>
+        <div class="teaser" id="explorer-teaser">Coming after Season 1: the House Anatomy Explorer. Tap through every layer of a house, from footing to shingles.</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="tbl-h">
+    <h2 id="tbl-h">Your glass, all winter</h2>
+    <p class="say muted" id="tbl-note"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outside</th><th>Inside glass</th><th>Keep humidity under</th></tr></thead>
+        <tbody id="tbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>How it works: the limits come from the University of Minnesota's cold-climate table (W. J. Angell, "Indoor Winter Relative Humidity: What Is Acceptable?", Minnesota Extension Service, 1988), measured at 70°F inside with a 15 mph wind. The tool turns that table into a glass-surface temperature, so it still works when your thermostat isn't at 70. Deep window wells, closed blinds and heavy curtains keep warm air off the glass and make it sweat sooner.</p>
+    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>General guidance, not an inspection. Rot, mold or water inside walls needs a professional.</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   SETTINGS: fill these in as things go live
+------------------------------------------------------------------- */
+const CONFIG = {
+  AMAZON_TAG: "howbuildingsw-20", // Amazon Associates tracking ID
+  EP6_URL: "",         // "Why Your Windows Sweat in Winter" once published
+  CHANNEL_URL: "https://www.youtube.com/@mattrobertson00",
+  EXPLORER_URL: ""     // House Anatomy Explorer sales page at launch
+};
+
+/* ------------------------------------------------------------------
+   PUBLISHED DATA
+   Max indoor RH (%) before condensation, 70°F inside, 15 mph wind.
+   Angell, Univ. of Minnesota Extension, 1988. Where the source gives a
+   range, the LOW end is used (conservative).
+   KING CHECK: "low-E / argon" mapped to the source's
+   "sealed double + storm (R 2.5–3.2)" row, and "triple pane" mapped to its
+   "sealed quadruple (R 3.5–4.0+)" row, by R-value.
+------------------------------------------------------------------- */
+const TEMPS = [40, 30, 20, 10, 0, -10, -20, -30];
+const WINDOWS = {
+  single: { name: "Single pane",            sub: "One layer of glass · R 0.7–1.1",              panes: 1, rh: [43, 32, 24, 18, 12, 8, 5, 2] },
+  storm:  { name: "Single pane + storm",    sub: "Old window with a storm window · R 1.6–2.3",  panes: 2, gap: 40, rh: [58, 48, 40, 32, 27, 22, 18, 14] },
+  double: { name: "Double pane",            sub: "Sealed insulated glass · R 1.7–2.3",          panes: 2, rh: [63, 54, 47, 40, 32, 28, 24, 20] },
+  lowe:   { name: "Double pane, low-E / argon", sub: "Or double pane + storm · R 2.5–3.2",      panes: 2, rh: [72, 68, 60, 54, 48, 43, 39, 36] },
+  triple: { name: "Triple pane",            sub: "High-performance glass · R 3.5+",             panes: 3, rh: [78, 73, 69, 64, 60, 57, 54, 50] }
+};
+
+const CAP = 50;          // Above 50% indoor RH, moisture problems start (U of MN Extension)
+const DRY = 30;          // ENERGY STAR suggests 30–40% in cold climates
+
+/* ---------------- psychrometrics ---------------- */
+const f2c = F => (F - 32) * 5 / 9;
+const c2f = C => C * 9 / 5 + 32;
+const es = C => 6.112 * Math.exp(17.62 * C / (243.12 + C));     // Magnus, hPa
+function dewF(tF, rh) {
+  const T = f2c(tF);
+  const g = Math.log(rh / 100) + 17.62 * T / (243.12 + T);
+  return c2f(243.12 * g / (17.62 - g));
+}
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+
+function tableRH(win, tOut) {
+  const t = clamp(tOut, -30, 40);
+  for (let i = 0; i < TEMPS.length - 1; i++) {
+    const hi = TEMPS[i], lo = TEMPS[i + 1];
+    if (t <= hi && t >= lo) {
+      const k = (hi - t) / (hi - lo);
+      return win.rh[i] + k * (win.rh[i + 1] - win.rh[i]);
+    }
+  }
+  return win.rh[0];
+}
+/* temperature index of the glass's coldest point, from the 70°F table */
+function glassIndex(win, tOut) {
+  const t = clamp(tOut, -30, 40);
+  return (dewF(70, tableRH(win, t)) - t) / (70 - t);
+}
+function glassTemp(win, tOut, tIn) {
+  return tOut + glassIndex(win, tOut) * (tIn - tOut);
+}
+function maxRH(win, tOut, tIn) {
+  if (tOut >= tIn - 2) return 100;
+  const ts = glassTemp(win, tOut, tIn);
+  return 100 * es(f2c(ts)) / es(f2c(tIn));
+}
+/* warmest outdoor temp at which this humidity starts wetting the glass */
+function sweatsBelow(win, tIn, rh) {
+  for (let t = 50; t >= -40; t -= 1) {
+    if (maxRH(win, t, tIn) < rh) return t;
+  }
+  return null;
+}
+
+/* ---------------- products ---------------- */
+function amazon(q) {
+  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
+  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
+}
+const PRODUCTS = {
+  hygro:    { name: "Digital hygrometer", why: "Know your number. Set it in the room with the wet windows, not the hallway.", q: "digital hygrometer indoor" },
+  film:     { name: "Window insulation film kit", why: "Shrink film on the inside frame traps an air layer, so the surface you see stays warmer.", q: "window insulation film kit indoor" },
+  fan:      { name: "Bath fan timer switch", why: "Keeps the fan running 20 minutes after a shower so the steam leaves the house.", q: "bathroom exhaust fan timer switch" },
+  auto:     { name: "Automatic humidifier control", why: "For furnace humidifiers. An outdoor sensor turns the setting down as it gets colder, the same math as this tool.", q: "whole house humidifier automatic control outdoor sensor" },
+  humid:    { name: "Evaporative humidifier", why: "For one dry bedroom. Evaporative types don't leave white dust like ultrasonic ones can.", q: "evaporative humidifier" }
+};
+
+/* ---------------- state ---------------- */
+const S = { water: "inside", tOut: 0, win: "double", rh: 40, rhKnown: true, tIn: 70 };
+
+const $ = id => document.getElementById(id);
+function buildWindowPicker() {
+  $("wtypes").innerHTML = Object.entries(WINDOWS).map(([k, w]) =>
+    `<div class="wtype"><input type="radio" name="win" id="win-${k}" value="${k}"${k === S.win ? " checked" : ""}>` +
+    `<label for="win-${k}"><span class="wname">${w.name}</span><span class="wsub">${w.sub}</span></label></div>`
+  ).join("");
+}
+
+/* ---------------- drawing ---------------- */
+function windowSVG(state, winKey, tOut, tIn, ts, dew) {
+  const w = WINDOWS[winKey];
+  const cx = 190;
+  let xs;
+  if (w.panes === 1) xs = [cx];
+  else if (w.panes === 3) xs = [cx - 15, cx, cx + 15];
+  else xs = w.gap ? [cx - w.gap / 2, cx + w.gap / 2] : [cx - 8, cx + 8];
+  const x0 = xs[0], x1 = xs[xs.length - 1];
+  const top = 34, bot = 176;
+  const ink = "#25262A", red = "#C4362C", blue = "#3F7FBF", green = "#3D9461";
+
+  let g = "";
+  // wall above and below (hatched masonry-style section)
+  g += `<rect x="${x0 - 26}" y="6" width="${x1 - x0 + 52}" height="${top - 12}" fill="url(#hatch)" stroke="${ink}" stroke-width="1.6"/>`;
+  g += `<rect x="${x0 - 26}" y="${bot + 18}" width="${x1 - x0 + 52}" height="22" fill="url(#hatch)" stroke="${ink}" stroke-width="1.6"/>`;
+  // head and sill frame
+  g += `<rect x="${x0 - 12}" y="${top - 6}" width="${x1 - x0 + 24}" height="10" fill="#F3EFE4" stroke="${ink}" stroke-width="1.6"/>`;
+  g += `<rect x="${x0 - 12}" y="${bot - 4}" width="${x1 - x0 + 24}" height="12" fill="#F3EFE4" stroke="${ink}" stroke-width="1.6"/>`;
+  // interior stool (window sill) and exterior sill slope
+  g += `<path d="M${x0 - 12} ${bot + 8} L${x0 - 74} ${bot + 8} L${x0 - 74} ${bot + 18} L${x0 - 12} ${bot + 18}" fill="#F3EFE4" stroke="${ink}" stroke-width="1.6"/>`;
+  g += `<path d="M${x1 + 12} ${bot + 4} L${x1 + 46} ${bot + 12} L${x1 + 46} ${bot + 18} L${x1 + 12} ${bot + 18}" fill="#F3EFE4" stroke="${ink}" stroke-width="1.6"/>`;
+  // glass air spaces
+  for (let i = 0; i < xs.length - 1; i++) {
+    const fog = state === "seal" && i === 0;
+    g += `<rect x="${xs[i]}" y="${top + 4}" width="${xs[i + 1] - xs[i]}" height="${bot - top - 8}" fill="${fog ? "url(#fog)" : "rgba(63,127,191,.10)"}"/>`;
+  }
+  // panes
+  xs.forEach(x => { g += `<line x1="${x}" y1="${top + 4}" x2="${x}" y2="${bot - 4}" stroke="${ink}" stroke-width="2.2"/>`; });
+
+  let drops = "";
+  const dropSet = (x, color, n, side) => {
+    let s = "";
+    for (let i = 0; i < n; i++) {
+      const y = bot - 14 - ((i * 37) % 100);
+      const r = 2 + ((i * 7) % 3) * 0.7;
+      const dx = side * (r + 0.5);
+      s += `<path d="M${x + dx} ${y - r * 1.8} Q${x + dx + r} ${y} ${x + dx} ${y + r} Q${x + dx - r} ${y} ${x + dx} ${y - r * 1.8}Z" fill="${color}"/>`;
+    }
+    return s;
+  };
+  if (state === "high") {
+    drops += dropSet(x0, red, 9, -1);
+    drops += `<ellipse cx="${x0 - 30}" cy="${bot + 7}" rx="16" ry="2.4" fill="${red}" opacity=".8"/>`;
+  }
+  if (state === "seal") drops += dropSet((xs[0] + xs[1]) / 2 - 2, red, 6, 1);
+  if (state === "outside") drops += dropSet(x1, blue, 8, 1);
+  if (state === "ok" || state === "target") {
+    drops += `<path d="M${x0 - 46} ${top + 40} l8 9 l16 -20" fill="none" stroke="${green}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+
+  // labels (same size per role)
+  const L = 11;
+  let t = "";
+  t += `<text x="16" y="${top + 4}" font-size="${L}" fill="${ink}">INSIDE ${Math.round(tIn)}°F</text>`;
+  t += `<text x="364" y="${top + 4}" font-size="${L}" fill="${ink}" text-anchor="end">OUTSIDE ${Math.round(tOut)}°F</text>`;
+  t += `<text x="16" y="${top + 82}" font-size="${L}" fill="${ink}">INSIDE GLASS</text>`;
+  t += `<text x="16" y="${top + 96}" font-size="${L}" fill="${ink}">${Math.round(ts)}°F</text>`;
+  if (dew !== null) {
+    const wet = dew >= ts;
+    t += `<text x="16" y="${top + 118}" font-size="${L}" fill="${wet ? red : green}">DEW POINT</text>`;
+    t += `<text x="16" y="${top + 132}" font-size="${L}" fill="${wet ? red : green}">${Math.round(dew)}°F</text>`;
+  }
+  t += `<line x1="96" y1="${top + 87}" x2="${x0 - 3}" y2="${top + 87}" stroke="${ink}" stroke-width="1" stroke-dasharray="3 3"/>`;
+  if (state === "seal") t += `<text x="${x1 + 20}" y="${top + 60}" font-size="${L}" fill="${red}">FAILED SEAL</text>`;
+  if (state === "outside") t += `<text x="${x1 + 20}" y="${top + 60}" font-size="${L}" fill="${blue}">DEW</text>`;
+
+  return `<svg viewBox="0 0 380 240" role="img" aria-label="Section through the window showing where water forms">
+    <defs>
+      <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
+      <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="${ink}" stroke-width="1" opacity=".55"/></pattern>
+      <pattern id="fog" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="rgba(37,38,42,.10)"/><circle cx="2.5" cy="2.5" r=".9" fill="${ink}" opacity=".35"/></pattern>
+    </defs>
+    <g filter="url(#wob)">${g}${drops}</g>
+    <g font-family="Architects Daughter, cursive" letter-spacing=".5">${t}</g>
+  </svg>`;
+}
+
+function meter(rh, target) {
+  const max = 70;
+  const pct = v => (clamp(v, 0, max) / max * 100).toFixed(2) + "%";
+  const dryEnd = Math.min(DRY, target);
+  const goodEnd = target;
+  let bar = `<span class="dry" style="width:${pct(dryEnd)}"></span>`;
+  if (goodEnd > dryEnd) bar += `<span class="good" style="width:${pct(goodEnd - dryEnd)}"></span>`;
+  bar += `<span class="wet" style="flex:1"></span>`;
+  if (rh !== null) bar += `<span class="pin" style="left:${pct(rh)}" title="You: ${rh}%"></span>`;
+  $("bar").innerHTML = bar;
+  const marks = [0, Math.round(target), 70];
+  if (rh !== null && Math.abs(rh - target) > 6 && rh > 6 && rh < 64) marks.push(rh);
+  $("meter-scale").innerHTML = marks.map(m =>
+    `<span style="left:${pct(m)}${m === 0 ? ";transform:none" : m === 70 ? ";transform:translateX(-100%)" : ""}">${m === rh && rh !== null && m !== Math.round(target) ? "YOU " : ""}${m}%</span>`
+  ).join("");
+}
+
+/* ---------------- logic ---------------- */
+function decide() {
+  const win = WINDOWS[S.win];
+  const line = maxRH(win, S.tOut, S.tIn);
+  const target = Math.max(0, Math.floor(Math.min(CAP, line) + 1e-6));
+  const rh = S.rhKnown ? S.rh : null;
+  let state;
+  if (S.water === "between") state = "seal";
+  else if (S.water === "outside") state = "outside";
+  else if (S.water === "inside") state = "high";
+  else if (rh === null) state = "target";
+  else if (rh > target) state = "high";
+  else if (rh < DRY) state = "low";
+  else state = "ok";
+  return { win, line, target, rh, state };
+}
+
+function render() {
+  const { win, target, rh, state } = decide();
+  const ts = glassTemp(win, S.tOut, S.tIn);
+  const dew = rh !== null ? dewF(S.tIn, rh) : null;
+  const below = rh !== null ? sweatsBelow(win, S.tIn, rh) : null;
+  const tOut = S.tOut;
+
+  $("t-out-read").textContent = tOut + "°F";
+  $("rh-read").textContent = S.rhKnown ? S.rh + "%" : "?";
+  $("rh").disabled = !S.rhKnown;
+  $("t-in-read").textContent = S.tIn + "°F";
+
+  const status = $("status");
+  const labels = { high: "Too humid", low: "Too dry", ok: "In the zone", target: "Your number", seal: "Seal failed", outside: "That's normal" };
+  status.textContent = labels[state];
+  status.className = "status s-" + state;
+
+  let big = "", say = "", fixes = [], prods = [];
+  const warm = tOut >= S.tIn - 2;
+
+  if (state === "high") {
+    big = `Keep it under <span class="num">${target}%</span>`;
+    if (rh !== null && rh > target) {
+      say = `You're at ${rh}%. At ${tOut}°F with ${win.name.toLowerCase()} windows, drop about ${rh - target} points and the glass dries up.`;
+    } else if (rh !== null) {
+      say = `Your meter says ${rh}%, under the line, but the glass is still wet. Check the meter in that room: bedrooms, baths and kitchens run wetter than the hallway. Closed blinds and heavy curtains also keep warm air off the glass.`;
+    } else {
+      say = `At ${tOut}°F, ${win.name.toLowerCase()} windows get wet above ${target}%. If yours are wet, you're over it. A hygrometer tells you by how much.`;
+    }
+    fixes = [
+      "Run the bath fan during showers and 20 minutes after.",
+      "Use the range hood every time you cook.",
+      "Turn the furnace humidifier down as it gets colder.",
+      "Leave a gap under blinds and curtains so room air reaches the glass.",
+      "Dry laundry in the dryer, and make sure the dryer vents outside.",
+      "Wipe the sill dry. Standing water rots wood and grows mold."
+    ];
+    prods = rh === null ? ["hygro", "fan", "auto", "film"] : ["fan", "auto", "film", "hygro"];
+  } else if (state === "low") {
+    if (target >= DRY) {
+      big = `Room to go up to <span class="num">${target}%</span>`;
+      say = `You're at ${rh}%. ENERGY STAR suggests 30–40% in cold climates, and at ${tOut}°F your glass stays dry up to ${target}%.`;
+      fixes = [
+        "Add moisture to the room you sleep in, not the whole house.",
+        `Stop at ${target}%. Past that, the windows start to sweat.`,
+        "Check this again before a cold snap. The safe number drops with the temperature."
+      ];
+      prods = ["humid", "hygro", "auto"];
+    } else {
+      big = `Your glass is the limit: <span class="num">${target}%</span>`;
+      say = `You're at ${rh}% and it feels dry, but at ${tOut}°F these windows sweat above ${target}%. Adding humidity now just wets the glass. Warm the glass first.`;
+      fixes = [
+        "Put insulation film or storm windows on the worst windows.",
+        "Keep blinds and curtains open a few inches at the bottom.",
+        "Add humidity after the cold snap, when the safe number climbs back up."
+      ];
+      prods = ["film", "hygro"];
+    }
+  } else if (state === "ok") {
+    big = `You're fine under <span class="num">${target}%</span>`;
+    say = `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} windows stay dry up to ${target}%.`;
+    fixes = [
+      "Check this again when the forecast drops. The safe number falls about 5 points for every 10 degrees colder.",
+      "Keep the bath fan and range hood habits going all winter."
+    ];
+    prods = ["hygro", "auto"];
+  } else if (state === "target") {
+    big = warm ? `Keep it under <span class="num">${target}%</span>` : `Keep it under <span class="num">${target}%</span>`;
+    say = `At ${tOut}°F, ${win.name.toLowerCase()} windows stay dry up to ${target}%. You don't know your humidity yet. A hygrometer tells you in a minute.`;
+    fixes = [
+      "Put a hygrometer in the room where windows sweat first.",
+      "Check this again when the forecast drops. Colder nights mean a lower number."
+    ];
+    prods = ["hygro", "auto"];
+  } else if (state === "seal") {
+    big = `Not a humidity problem`;
+    say = `Fog or water between the panes means the glass unit's edge seal has failed and outside air got in. Turning down the humidity won't clear it, and it won't dry out on its own. The insulating gas has likely leaked out too, so that pane now loses more heat.`;
+    fixes = [
+      "Check the window warranty for glass-seal coverage.",
+      "Ask for a quote to replace only the glass unit. The frame and sash can often stay.",
+      "If the frame is soft or rotted, or several units have failed, price a full replacement.",
+      "Until then, it's a heat-loss and looks problem, not an emergency."
+    ];
+    prods = [];
+  } else if (state === "outside") {
+    big = `Dew on the outside`;
+    say = `Water on the outside of the glass is dew, the same as on your car. It shows up on cool, clear, still mornings when the glass holds your heat in well enough that the outer pane stays cold. It burns off with the sun.`;
+    fixes = [
+      "Nothing to fix. Good windows do this more than old ones.",
+      "If water is also on the inside, switch to “inside of the glass.”"
+    ];
+    prods = [];
+  }
+
+  $("big").innerHTML = big;
+  $("say").textContent = say;
+
+  const sw = $("sweat");
+  if (rh !== null && (state === "high" || state === "ok" || state === "low")) {
+    sw.hidden = false;
+    if (below === null) {
+      sw.textContent = `At ${rh}%, this glass stays dry even at -40°F.`;
+      sw.className = "sweat calm";
+    } else if (below >= tOut) {
+      sw.textContent = `At ${rh}%, this glass starts sweating once it drops below ${below}°F outside. It's ${tOut}°F now.`;
+      sw.className = "sweat";
+    } else {
+      sw.textContent = `At ${rh}%, this glass starts sweating below ${below}°F outside.`;
+      sw.className = "sweat calm";
+    }
+  } else sw.hidden = true;
+
+  const showMeter = state !== "seal" && state !== "outside";
+  $("meter").hidden = !showMeter;
+  if (showMeter) meter(rh, target);
+
+  $("figure").innerHTML = windowSVG(state, S.win, tOut, S.tIn, ts, (state === "seal" || state === "outside") ? null : dew);
+  $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
+
+  $("products-wrap").hidden = prods.length === 0;
+  $("products").innerHTML = prods.map(k => {
+    const p = PRODUCTS[k];
+    return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
+      `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
+  }).join("");
+
+  renderTable(win);
+}
+
+function renderTable(win) {
+  const rows = [];
+  for (let t = 40; t >= -30; t -= 10) {
+    const ts = glassTemp(win, t, S.tIn);
+    const m = Math.floor(Math.min(CAP, maxRH(win, t, S.tIn)) + 1e-6);
+    const here = S.tOut <= t + 5 && S.tOut > t - 5;
+    rows.push(`<tr class="${here ? "here" : ""}"><td>${t}°F</td><td>${Math.round(ts)}°F</td><td>${m}%</td></tr>`);
+  }
+  $("tbl").innerHTML = rows.join("");
+  $("tbl-note").textContent = `${win.name}, thermostat at ${S.tIn}°F. Tape this inside a closet door and check it when the forecast changes.`;
+}
+
+function links() {
+  const ep = $("ep-link");
+  ep.href = CONFIG.EP6_URL || CONFIG.CHANNEL_URL;
+  $("ep-note").textContent = CONFIG.EP6_URL ? "Episode 6" : "On the channel";
+  if (CONFIG.EXPLORER_URL) {
+    $("explorer-link").href = CONFIG.EXPLORER_URL;
+    $("explorer-link").hidden = false;
+    $("explorer-teaser").hidden = true;
+  }
+}
+
+/* ---------------- wiring ---------------- */
+buildWindowPicker();
+document.querySelectorAll('input[name="water"]').forEach(r => r.addEventListener("change", e => { S.water = e.target.value; render(); }));
+$("wtypes").addEventListener("change", e => { if (e.target.name === "win") { S.win = e.target.value; render(); } });
+$("t-out").addEventListener("input", e => { S.tOut = +e.target.value; render(); });
+$("rh").addEventListener("input", e => { S.rh = +e.target.value; render(); });
+$("rh-unknown").addEventListener("change", e => { S.rhKnown = !e.target.checked; render(); });
+$("t-in-down").addEventListener("click", () => { S.tIn = Math.max(60, S.tIn - 1); render(); });
+$("t-in-up").addEventListener("click", () => { S.tIn = Math.min(78, S.tIn + 1); render(); });
+links();
+render();
+</script>
+</body>
+</html>

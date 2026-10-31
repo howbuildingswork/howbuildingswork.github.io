@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Buildings Work Tools</title>
+<meta name="description" content="Free one-question calculators for homeowners from the How Buildings Work YouTube channel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F3EFE4;
+  --ink: #25262A;
+  --red: #C4362C;
+  --green: #3D9461;
+  --rule: rgba(37, 38, 42, 0.16);
+  --font: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* layout: one drafting sheet, a single column of tool cards */
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 16px 48px; display: grid; gap: 20px; }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; display: grid; gap: 4px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; }
+h1 { margin: 0; font-size: 32px; font-weight: 400; line-height: 1.15; text-wrap: balance; }
+p { margin: 0; max-width: 60ch; }
+.tools { display: grid; gap: 12px; }
+.tool { display: grid; gap: 4px; border: 2px solid var(--ink); border-radius: 3px; padding: 14px 16px; color: var(--ink); text-decoration: none; background: var(--paper); }
+.tool:hover { background: rgba(37, 38, 42, 0.05); }
+.tool:focus-visible, .btn:focus-visible { outline: 3px solid #3F7FBF; outline-offset: 2px; }
+.tool .name { font-size: 20px; }
+.tool .ep { font-size: 12px; letter-spacing: 0.1em; color: var(--red); }
+.tool .what { font-size: 14px; opacity: 0.8; }
+.soon { border: 1.5px dashed var(--ink); border-radius: 3px; padding: 12px 16px; font-size: 14px; }
+.btn { justify-self: start; background: var(--ink); color: var(--paper); text-decoration: none; border-radius: 3px; padding: 10px 14px; }
+footer { border-top: 2px solid var(--ink); padding-top: 10px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="eyebrow">How Buildings Work · Free tools</div>
+    <h1>One question, one answer, about your house</h1>
+    <p>Each tool goes with an episode of the channel. Put in your numbers, get an answer you can act on.</p>
+  </header>
+
+  <div class="tools">
+    <a class="tool" href="windows-sweating/">
+      <span class="ep">Episode 6 · Window condensation</span>
+      <span class="name">Why are my windows sweating?</span>
+      <span class="what">The highest indoor humidity your windows can take before they get wet, for tonight's temperature.</span>
+    </a>
+  </div>
+
+  <div class="soon">More tools arrive with new episodes.</div>
+
+  <a class="btn" href="https://www.youtube.com/@mattrobertson00" rel="noopener">Watch How Buildings Work on YouTube</a>
+
+  <footer>As an Amazon Associate, How Buildings Work earns from qualifying purchases.</footer>
+</div>
+</body>
+</html>
