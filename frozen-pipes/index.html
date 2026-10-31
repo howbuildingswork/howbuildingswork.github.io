@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will My Pipes Freeze?</title>
+<meta name="description" content="List the pipes in the cold spots of your house and get a shopping list to protect them. Free tool from How Buildings Work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* How Buildings Work channel palette: drafting ink on cream trace paper */
+  --paper: #F3EFE4;
+  --ink: #25262A;
+  --red: #C4362C;
+  --green: #3D9461;
+  --blue: #3F7FBF;
+  --rule: rgba(37, 38, 42, 0.16);
+  --font: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* layout: one drafting sheet; inputs and result side by side on desktop, result first on phones */
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.sheet { max-width: 1040px; margin: 0 auto; padding: 20px 16px 40px; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; }
+.eyebrow a { color: var(--ink); }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; font-weight: 400; text-wrap: balance; }
+.lede { margin: 0; max-width: 62ch; }
+
+.layout { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.result-col { order: -1; }
+@media (min-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+  .result-col { order: 0; position: sticky; top: 16px; }
+}
+.panel { background: var(--paper); border: 2px solid var(--ink); border-radius: 3px; padding: 16px; display: grid; gap: 16px; }
+.panel h2 { font-size: 13px; letter-spacing: 0.12em; margin: 0; font-weight: 400; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+legend, .field-label { font-size: 13px; letter-spacing: 0.1em; padding: 0; margin-bottom: 6px; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.chips.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip label {
+  display: block; cursor: pointer; text-align: center; font-size: 14px;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 9px 8px; background: var(--paper);
+  transition: background 0.12s, color 0.12s; height: 100%;
+}
+.chip label small { display: block; font-size: 11px; opacity: 0.75; }
+.chip input:checked + label { background: var(--ink); color: var(--paper); }
+.chip input:focus-visible + label { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.slider-row { display: grid; gap: 6px; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.readout { font-size: 26px; line-height: 1; }
+input[type="range"] { width: 100%; accent-color: var(--ink); height: 28px; }
+input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.scale { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.7; }
+.hint { font-size: 12px; opacity: 0.75; margin: 0; }
+.dims { display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 8px; align-items: center; }
+.num {
+  font: inherit; font-size: 18px; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 6px 8px; width: 100%; min-width: 0;
+}
+.num:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.area-out { font-size: 14px; white-space: nowrap; }
+
+.status { justify-self: start; border: 2px solid currentColor; border-radius: 3px; padding: 3px 10px; font-size: 14px; letter-spacing: 0.12em; }
+.s-short, .s-none, .s-stop { color: var(--red); }
+.s-ok { color: var(--green); }
+.s-leaks { color: var(--blue); }
+.big { font-size: 40px; line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+.big .n { font-size: 56px; }
+.say { margin: 0; max-width: 60ch; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fact { border: 1.5px solid var(--ink); border-radius: 3px; padding: 8px; display: grid; gap: 2px; }
+.fact .k { font-size: 11px; letter-spacing: 0.1em; opacity: 0.75; }
+.fact .v { font-size: 22px; line-height: 1.1; }
+.callout { margin: 0; padding: 8px 10px; border-left: 4px solid var(--red); background: rgba(196, 54, 44, 0.07); }
+.callout.blue { border-left-color: var(--blue); background: rgba(63, 127, 191, 0.08); }
+.callout.green { border-left-color: var(--green); background: rgba(61, 148, 97, 0.08); }
+
+.figure { border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.35); border-radius: 3px; }
+.figure svg { display: block; width: 100%; height: auto; }
+
+.fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.products { display: grid; gap: 8px; }
+.product {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
+  color: var(--ink); text-decoration: none; background: var(--paper);
+}
+.product:hover { background: rgba(37, 38, 42, 0.05); }
+.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.product .pname { font-size: 15px; }
+.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
+.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+.paid { font-size: 11px; opacity: 0.7; }
+
+.funnel { display: grid; gap: 10px; }
+.btn {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--ink); color: var(--paper); text-decoration: none;
+  border-radius: 3px; padding: 12px 14px; font-size: 15px;
+}
+.btn.ghost { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.btn small { font-size: 12px; opacity: 0.8; }
+.teaser { border: 1.5px dashed var(--ink); border-radius: 3px; padding: 10px 12px; font-size: 13px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { border-bottom: 1px solid var(--rule); padding: 5px 6px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 400; letter-spacing: 0.08em; border-bottom: 1.5px solid var(--ink); }
+tr.here td { background: rgba(37, 38, 42, 0.08); }
+.table-wrap { overflow-x: auto; }
+
+footer { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: 12px; }
+footer p { margin: 0; max-width: 90ch; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.runs { display: grid; gap: 8px; }
+.run { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr) minmax(0, 0.9fr) auto auto; gap: 6px; align-items: center; }
+.run select.num { font-size: 14px; padding: 6px 4px; }
+.run .unit { font-size: 13px; }
+.x { font: inherit; font-size: 20px; line-height: 1; background: none; border: 1.5px solid var(--ink); border-radius: 3px; color: var(--ink); width: 34px; height: 34px; cursor: pointer; }
+.x:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+button.btn { font: inherit; cursor: pointer; width: 100%; }
+button.btn:disabled { opacity: .5; cursor: default; }
+#modes { margin-top: -4px; }
+td { vertical-align: top; }
+#plan td, .table-wrap th { text-align: left; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="eyebrow"><a href="../">How Buildings Work · Free tools</a></div>
+    <h1>Will my pipes freeze?</h1>
+    <p class="lede">List the pipes in the cold spots of your house. Get a shopping list to protect them, plus what to do if one freezes or you're leaving for a trip.</p>
+  </header>
+
+  <fieldset>
+    <legend class="sr">What do you need?</legend>
+    <div class="chips three" id="modes">
+      <div class="chip"><input type="radio" name="mode" id="m-protect" value="protect" checked><label for="m-protect">Protect my pipes</label></div>
+      <div class="chip"><input type="radio" name="mode" id="m-frozen" value="frozen"><label for="m-frozen">A pipe is frozen</label></div>
+      <div class="chip"><input type="radio" name="mode" id="m-away" value="away"><label for="m-away">Leaving on a trip</label></div>
+    </div>
+  </fieldset>
+
+  <div class="layout" id="protect-view">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h">Pipes in cold spots</h2>
+      <p class="hint">Walk the basement and crawl space. Any pipe on an outside wall, along the rim joist, in a crawl space, garage or attic goes on the list.</p>
+      <div id="runs" class="runs"></div>
+      <button type="button" class="btn ghost" id="add-run"><span>+ Add another pipe</span><small>Up to 10</small></button>
+
+      <div class="slider-row">
+        <span class="field-label" id="bib-label">Outdoor hose faucets</span>
+        <div class="dims" role="group" aria-labelledby="bib-label">
+          <input class="num" type="number" id="bibs" inputmode="numeric" min="0" max="10" value="2" aria-label="How many outdoor faucets">
+          <span>faucets</span>
+          <input class="num" type="number" id="wall" inputmode="decimal" min="2" max="20" value="10" aria-label="Wall thickness in inches">
+          <span>in. wall</span>
+        </div>
+        <p class="hint">Wall thickness: from the outside face of the siding to the inside face of the rim joist or wall, measured where the faucet goes through.</p>
+      </div>
+    </section>
+
+    <section class="result-col panel" aria-live="polite" aria-labelledby="res-h">
+      <h2 id="res-h">Your shopping list</h2>
+      <span class="status s-short" id="status">At risk</span>
+      <p class="big" id="big"></p>
+      <div class="facts" id="facts"></div>
+      <div class="figure" id="figure"></div>
+      <p class="say" id="say"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pipe</th><th>Fix</th><th>Buy</th></tr></thead>
+          <tbody id="plan"></tbody>
+        </table>
+      </div>
+      <p class="callout blue" id="callout"></p>
+      <div>
+        <h2 id="fix-h">Before it gets cold</h2>
+        <ol class="fixes" id="fixes" aria-labelledby="fix-h"></ol>
+      </div>
+      <div id="products-wrap">
+        <h2>What helps <span class="paid">(paid links)</span></h2>
+        <div class="products" id="products" style="margin-top:8px"></div>
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </section>
+  </div>
+
+  <div class="layout" id="other-view" hidden>
+    <section class="panel">
+      <h2 id="o-h">Right now</h2>
+      <span class="status s-stop" id="o-status">Act fast</span>
+      <p class="big" id="o-big"></p>
+      <p class="say" id="o-say"></p>
+      <ol class="fixes" id="o-steps"></ol>
+      <p class="callout" id="o-callout"></p>
+    </section>
+    <section class="result-col panel">
+      <div id="o-products-wrap">
+        <h2>What helps <span class="paid">(paid links)</span></h2>
+        <div class="products" id="o-products" style="margin-top:8px"></div>
+      </div>
+      <div class="funnel" id="o-funnel"></div>
+    </section>
+  </div>
+
+  <footer>
+    <p>How it works: research by the University of Illinois Building Research Council found that unprotected pipes in unheated spaces start to freeze when it's 20°F or colder outside, and sooner with wind or drafts. Pipes usually burst downstream of the ice, where pressure builds between the ice plug and a closed faucet, which is why a dripping faucet helps. Foam sleeves are counted in 6-foot lengths; heat cable is matched to the next common cable length at or above each run. Follow the cable's own instructions and plug it into a GFCI outlet.</p>
+    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>General guidance, not a plumbing inspection. If water won't come out or a pipe has split, shut off the main and call a plumber.</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   SETTINGS: fill these in as things go live
+------------------------------------------------------------------- */
+const CONFIG = {
+  AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
+  EP_URL: "https://youtu.be/MuQJwwHvI0k",      // "Why Your Pipes Freeze"
+  CHANNEL_URL: "https://www.youtube.com/@mattrobertson00",
+  EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
+};
+
+/* ------------------------------------------------------------------
+   DATA
+   Freeze threshold: Univ. of Illinois Building Research Council
+   (unprotected pipes in unheated spaces start freezing at 20°F outside).
+   Foam sleeves: sold in 6-ft lengths. Heat cable: common pre-assembled
+   lengths below; pick the next one at or above the run.
+------------------------------------------------------------------- */
+const LOCS = {
+  rim:     { name: "Rim joist / sill", cable: false, fix: "Seal and insulate the rim, then sleeve the pipe" },
+  wall:    { name: "Outside wall",     cable: false, fix: "Insulation between pipe and outside; open cabinet doors in a cold snap" },
+  crawl:   { name: "Crawl space",      cable: true,  fix: "Heat cable plus foam sleeve" },
+  garage:  { name: "Unheated garage",  cable: true,  fix: "Heat cable plus foam sleeve" },
+  attic:   { name: "Attic",            cable: true,  fix: "Heat cable plus foam sleeve, buried under attic insulation" }
+};
+const CABLE_LENGTHS = [3, 6, 9, 12, 15, 18, 24, 30, 40, 50, 60, 80, 100];
+const BIB_LENGTHS = [4, 6, 8, 10, 12, 14];
+const SLEEVE = 6;
+
+function amazon(q) {
+  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
+  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
+}
+const PRODUCTS = {
+  foam12:  { name: "Foam pipe insulation, 1/2 in.", why: "Split foam that slips over 1/2 in. pipe. Tape the seams and the joints between pieces.", q: "foam pipe insulation 1/2 inch 6 ft" },
+  foam34:  { name: "Foam pipe insulation, 3/4 in.", why: "Same, sized for 3/4 in. pipe. Check the label: copper and PEX of the same size take different sleeves.", q: "foam pipe insulation 3/4 inch 6 ft" },
+  cable:   { name: "Pipe heat cable with thermostat", why: "Built-in thermostat turns it on only when the pipe gets near freezing. Match the length to the run.", q: "pipe heat cable with thermostat" },
+  bib:     { name: "Frost-free hose faucet", why: "The shutoff sits inside the warm wall, so the part outside drains dry. Length must reach past the wall.", q: "frost free sillcock" },
+  cover:   { name: "Outdoor faucet covers", why: "Cheap insulated caps for regular hose faucets. Disconnect the hose first.", q: "outdoor faucet cover winter" },
+  rimfoam: { name: "Spray foam for the rim joist", why: "Seals the drafty gaps at the sill plate and rim, the cold air that freezes basement pipes.", q: "spray foam insulation gaps and cracks" },
+  alarm:   { name: "Wi-Fi freeze alarm", why: "Texts your phone when the basement or crawl space gets close to freezing.", q: "wifi temperature sensor freeze alarm" },
+  leak:    { name: "Water leak detectors", why: "Puck-size sensors that alarm the moment water hits the floor under a sink or by the water heater.", q: "water leak detector wifi" },
+  shutoff: { name: "Smart water shutoff valve", why: "Shuts the main automatically when a leak sensor trips. The best protection while you're away.", q: "smart water shutoff valve" },
+  thermal: { name: "Phone thermal camera", why: "Finds the cold spots on outside walls and the drafts at the rim joist where pipes run.", q: "thermal camera for phone" }
+};
+
+const S = {
+  mode: "protect",
+  runs: [
+    { loc: "rim", size: "12", len: 12 },
+    { loc: "crawl", size: "34", len: 20 },
+    { loc: "wall", size: "12", len: 6 }
+  ],
+  bibs: 2, wall: 10
+};
+const $ = id => document.getElementById(id);
+
+function runRow(r, i) {
+  const locOpts = Object.entries(LOCS).map(([k, v]) => `<option value="${k}"${k === r.loc ? " selected" : ""}>${v.name}</option>`).join("");
+  return `<div class="run" data-i="${i}">
+    <label class="sr" for="loc-${i}">Location of pipe ${i + 1}</label>
+    <select class="num" id="loc-${i}" data-k="loc">${locOpts}</select>
+    <label class="sr" for="size-${i}">Pipe size</label>
+    <select class="num" id="size-${i}" data-k="size"><option value="12"${r.size === "12" ? " selected" : ""}>1/2 in.</option><option value="34"${r.size === "34" ? " selected" : ""}>3/4 in.</option></select>
+    <label class="sr" for="len-${i}">Length in feet</label>
+    <input class="num" type="number" id="len-${i}" data-k="len" inputmode="decimal" min="1" max="200" value="${r.len}">
+    <span class="unit">ft</span>
+    <button type="button" class="x" data-del="${i}" aria-label="Remove pipe ${i + 1}">×</button>
+  </div>`;
+}
+function drawRuns() {
+  $("runs").innerHTML = S.runs.map(runRow).join("");
+  $("add-run").disabled = S.runs.length >= 10;
+}
+
+function sectionSVG() {
+  const ink = "#25262A", red = "#C4362C", blue = "#3F7FBF", green = "#3D9461";
+  return `<svg viewBox="0 0 400 200" role="img" aria-label="Section at the rim joist showing insulation between the pipe and the cold">
+    <defs>
+      <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="2"/></filter>
+      <pattern id="conc" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#E4E0D6"/><circle cx="2" cy="3" r=".8" fill="${ink}" opacity=".5"/><circle cx="6" cy="6" r=".6" fill="${ink}" opacity=".4"/></pattern>
+      <pattern id="wood" width="4" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#E8D9BC"/><line x1="2" y1="0" x2="2" y2="10" stroke="${ink}" stroke-width=".4" opacity=".5"/></pattern>
+      <pattern id="foam" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="rgba(217,165,32,.25)"/><circle cx="3" cy="3" r="1" fill="none" stroke="${ink}" stroke-width=".4" opacity=".6"/></pattern>
+    </defs>
+    <g filter="url(#wob)">
+      <rect x="250" y="120" width="40" height="80" fill="url(#conc)" stroke="${ink}" stroke-width="1.6"/>
+      <rect x="250" y="108" width="40" height="12" fill="url(#wood)" stroke="${ink}" stroke-width="1.4"/>
+      <rect x="276" y="40" width="10" height="68" fill="url(#wood)" stroke="${ink}" stroke-width="1.4"/>
+      <rect x="286" y="40" width="5" height="160" fill="#F3EFE4" stroke="${ink}" stroke-width="1"/>
+      <rect x="40" y="40" width="236" height="14" fill="url(#wood)" stroke="${ink}" stroke-width="1.4"/>
+      <rect x="40" y="54" width="236" height="10" fill="url(#wood)" stroke="${ink}" stroke-width="1" opacity=".7"/>
+      <rect x="246" y="64" width="30" height="44" fill="url(#foam)" stroke="${ink}" stroke-width="1.2"/>
+      <circle cx="226" cy="86" r="11" fill="url(#foam)" stroke="${ink}" stroke-width="1.2"/>
+      <circle cx="226" cy="86" r="5" fill="${blue}" stroke="${ink}" stroke-width="1"/>
+      <path d="M340 70 L300 80" stroke="${blue}" stroke-width="2" stroke-dasharray="4 4"/>
+      <path d="M306 74 L299 80 L308 83" fill="none" stroke="${blue}" stroke-width="2"/>
+      <path d="M110 110 C140 100 170 96 205 92" stroke="${red}" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+      <path d="M198 88 L206 92 L199 97" fill="none" stroke="${red}" stroke-width="2"/>
+      <rect x="244" y="104" width="34" height="5" fill="${green}" opacity=".8"/>
+    </g>
+    <g font-family="Architects Daughter, cursive" font-size="11" letter-spacing=".5">
+      <text x="306" y="60" fill="${blue}">COLD OUTSIDE</text>
+      <text x="40" y="126" fill="${red}">WARM BASEMENT</text>
+      <text x="40" y="30" fill="${ink}">FLOOR JOIST</text>
+      <text x="40" y="164" fill="${ink}">FOAM ON THE RIM</text>
+      <text x="40" y="178" fill="${ink}">+ SLEEVE ON THE PIPE</text>
+      <text x="300" y="120" fill="${ink}">SILL</text>
+      <text x="300" y="160" fill="${ink}">FOUNDATION</text>
+      <text x="40" y="146" fill="${green}">SEAL THE SILL GAP</text>
+    </g>
+  </svg>`;
+}
+
+function product(k) {
+  const p = PRODUCTS[k];
+  return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
+    `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
+}
+function funnel() {
+  const ep = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
+  let h = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Why your pipes freeze</span><small>${CONFIG.EP_URL ? "Episode 5" : "On the channel"}</small></a>`;
+  h += `<a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>`;
+  h += CONFIG.EXPLORER_URL
+    ? `<a class="btn" href="${CONFIG.EXPLORER_URL}" rel="noopener"><span>Explore every layer of a house</span><small>House Anatomy Explorer</small></a>`
+    : `<div class="teaser">Coming after Season 1: the House Anatomy Explorer. Tap through every layer of a house, from footing to shingles.</div>`;
+  return h;
+}
+
+function renderProtect() {
+  const runs = S.runs.filter(r => r.len > 0);
+  const ft = { "12": 0, "34": 0 };
+  let cableRuns = [], rows = [];
+  runs.forEach(r => {
+    ft[r.size] += r.len;
+    const L = LOCS[r.loc];
+    let buy = `${Math.ceil(r.len / SLEEVE)} × 6 ft sleeve`;
+    if (L.cable) {
+      const c = CABLE_LENGTHS.find(x => x >= r.len) || null;
+      cableRuns.push({ len: r.len, cable: c });
+      buy += c ? ` + ${c} ft cable` : ` + cable over 100 ft: split into runs`;
+    }
+    rows.push(`<tr><td>${L.name}, ${r.size === "12" ? "1/2" : "3/4"} in., ${r.len} ft</td><td>${L.fix}</td><td>${buy}</td></tr>`);
+  });
+  const sticks12 = Math.ceil(ft["12"] / SLEEVE), sticks34 = Math.ceil(ft["34"] / SLEEVE);
+  const totalFt = ft["12"] + ft["34"];
+  const bibLen = BIB_LENGTHS.find(x => x >= S.wall) || null;
+
+  $("status").textContent = runs.length ? "At risk below 20°F" : "Nothing listed";
+  $("status").className = "status " + (runs.length ? "s-short" : "s-ok");
+  $("big").innerHTML = runs.length ? `Protect <span class="n">${Math.round(totalFt)} ft</span> of pipe` : "Add a pipe to start";
+  $("facts").innerHTML = [
+    ["Foam sleeves", `${sticks12 + sticks34}`],
+    ["Heat cables", `${cableRuns.length}`],
+    ["Hose faucets", S.bibs > 0 ? (bibLen ? `${bibLen} in.` : "14 in.+") : "None"]
+  ].map(([k, v]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+  $("figure").innerHTML = sectionSVG();
+  $("say").textContent = runs.length
+    ? `Foam: ${sticks12} six-foot sleeves for 1/2 in. pipe and ${sticks34} for 3/4 in.${cableRuns.length ? ` Heat cable: ${cableRuns.map(c => c.cable ? c.cable + " ft" : "split run").join(", ")}, one per run in a space with no heat.` : " No heat cable needed: none of these pipes are in an unheated space."}`
+    : "List any pipe on an outside wall, along the rim joist, or in a crawl space, garage or attic.";
+  $("plan").innerHTML = rows.join("") + (S.bibs > 0
+    ? `<tr><td>${S.bibs} hose faucet${S.bibs > 1 ? "s" : ""}, ${S.wall} in. wall</td><td>Frost-free faucet long enough to reach the warm side</td><td>${bibLen ? bibLen + " in. frost-free" : "Longer than 14 in.: ask a plumber"}${S.bibs > 1 ? " × " + S.bibs : ""}</td></tr>` : "");
+  $("callout").textContent = "A foam sleeve doesn't make heat; it slows heat loss. On an outside wall, the insulation has to be between the pipe and the cold, and the warm house has to reach the pipe. Sealing the drafts at the rim joist matters more than the sleeve.";
+  $("fixes").innerHTML = [
+    "Find your main water shutoff and make sure it turns. Tag it so everyone knows where it is.",
+    "Seal the gaps at the sill and rim joist with spray foam, especially where pipes and wires go out.",
+    "Sleeve every pipe on the list. Tape seams and corners.",
+    cableRuns.length ? "Install heat cable on the crawl space, garage or attic runs, plugged into a GFCI outlet. Don't overlap or wrap it unless its instructions say you can." : "Check the garage and crawl space for pipes you missed.",
+    "Shut off and drain the hose faucets from inside, disconnect the hoses, and leave the outside valves open.",
+    "In a cold snap: open cabinet doors under sinks on outside walls and let the farthest faucet drip."
+  ].map(f => `<li>${f}</li>`).join("");
+  const prods = [];
+  if (ft["12"] > 0) prods.push("foam12");
+  if (ft["34"] > 0) prods.push("foam34");
+  if (cableRuns.length) prods.push("cable");
+  prods.push("rimfoam");
+  if (S.bibs > 0) prods.push("bib", "cover");
+  prods.push("alarm", "thermal");
+  $("products-wrap").hidden = false;
+  $("products").innerHTML = prods.map(product).join("");
+  $("funnel").innerHTML = funnel();
+}
+
+function renderOther() {
+  let big, say, steps, callout, prods, status;
+  if (S.mode === "frozen") {
+    status = "Act fast";
+    big = "Thaw it from the faucet back";
+    say = "A trickle or nothing from a faucet in cold weather means ice in the line. The goal is to relieve the pressure first, then warm the pipe slowly.";
+    steps = [
+      "Open the faucet that pipe feeds, hot and cold. Moving water helps melt the ice and relieves pressure.",
+      "Find the cold section: outside walls, the rim joist, under the sink on an outside wall.",
+      "Warm it starting near the faucet and work back toward the ice: hair dryer, heat lamp, or warm towels. Keep a space heater well clear of anything that burns.",
+      "Keep warming until full flow comes back, then check the whole run for drips.",
+      "If you can't find it, can't reach it, or it has split: shut off the main and call a plumber."
+    ];
+    callout = "Never use a torch, propane heater or any open flame on a pipe. It can start a fire inside the wall.";
+    prods = ["leak", "alarm", "foam12"];
+  } else {
+    status = "Before you go";
+    big = "Keep the heat on";
+    say = "Most frozen pipes in empty houses happen when the furnace quits or the thermostat is set too low. Plan for both.";
+    steps = [
+      "Set the thermostat no lower than 55°F. Don't turn the heat off.",
+      "Open cabinet doors under sinks on outside walls.",
+      "For a long trip, shut off the main water and open the faucets to drain the lines. If you have a boiler, ask before shutting off its water.",
+      "Shut off and drain the outside hose faucets.",
+      "Put a freeze alarm in the basement so your phone knows if the heat quits, and ask someone to check the house.",
+      "Leak sensors under sinks and by the water heater, or a smart shutoff valve, catch a burst before it floods."
+    ];
+    callout = "A furnace failure is the real risk. Check the furnace filter and get it serviced before winter if it's been a while.";
+    prods = ["alarm", "shutoff", "leak"];
+  }
+  $("o-status").textContent = status;
+  $("o-big").textContent = big;
+  $("o-say").textContent = say;
+  $("o-steps").innerHTML = steps.map(s => `<li>${s}</li>`).join("");
+  $("o-callout").textContent = callout;
+  $("o-products").innerHTML = prods.map(product).join("");
+  $("o-funnel").innerHTML = funnel();
+}
+
+function render() {
+  $("protect-view").hidden = S.mode !== "protect";
+  $("other-view").hidden = S.mode === "protect";
+  if (S.mode === "protect") renderProtect(); else renderOther();
+}
+
+/* ---------------- wiring ---------------- */
+drawRuns();
+document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener("change", e => { S.mode = e.target.value; render(); }));
+$("runs").addEventListener("input", e => {
+  const row = e.target.closest(".run"); if (!row) return;
+  const i = +row.dataset.i, k = e.target.dataset.k;
+  S.runs[i][k] = k === "len" ? (+e.target.value || 0) : e.target.value;
+  render();
+});
+$("runs").addEventListener("change", e => {
+  const row = e.target.closest(".run"); if (!row) return;
+  const i = +row.dataset.i, k = e.target.dataset.k;
+  if (k) { S.runs[i][k] = k === "len" ? (+e.target.value || 0) : e.target.value; render(); }
+});
+$("runs").addEventListener("click", e => {
+  const d = e.target.dataset.del; if (d === undefined) return;
+  S.runs.splice(+d, 1); drawRuns(); render();
+});
+$("add-run").addEventListener("click", () => {
+  if (S.runs.length >= 10) return;
+  S.runs.push({ loc: "rim", size: "12", len: 6 }); drawRuns(); render();
+  const last = document.getElementById("len-" + (S.runs.length - 1)); if (last) last.focus();
+});
+$("bibs").addEventListener("input", e => { S.bibs = Math.max(0, Math.round(+e.target.value || 0)); render(); });
+$("wall").addEventListener("input", e => { S.wall = +e.target.value || 0; render(); });
+render();
+</script>
+</body>
+</html>

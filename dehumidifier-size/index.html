@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Size Dehumidifier Do I Need?</title>
+<meta name="description" content="Size a basement dehumidifier on today's labels from your floor area and how damp it gets. Free tool from How Buildings Work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* How Buildings Work channel palette: drafting ink on cream trace paper */
+  --paper: #F3EFE4;
+  --ink: #25262A;
+  --red: #C4362C;
+  --green: #3D9461;
+  --blue: #3F7FBF;
+  --rule: rgba(37, 38, 42, 0.16);
+  --font: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* layout: one drafting sheet; inputs and result side by side on desktop, result first on phones */
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.sheet { max-width: 1040px; margin: 0 auto; padding: 20px 16px 40px; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; }
+.eyebrow a { color: var(--ink); }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; font-weight: 400; text-wrap: balance; }
+.lede { margin: 0; max-width: 62ch; }
+
+.layout { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.result-col { order: -1; }
+@media (min-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+  .result-col { order: 0; position: sticky; top: 16px; }
+}
+.panel { background: var(--paper); border: 2px solid var(--ink); border-radius: 3px; padding: 16px; display: grid; gap: 16px; }
+.panel h2 { font-size: 13px; letter-spacing: 0.12em; margin: 0; font-weight: 400; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+legend, .field-label { font-size: 13px; letter-spacing: 0.1em; padding: 0; margin-bottom: 6px; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.chips.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip label {
+  display: block; cursor: pointer; text-align: center; font-size: 14px;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 9px 8px; background: var(--paper);
+  transition: background 0.12s, color 0.12s; height: 100%;
+}
+.chip label small { display: block; font-size: 11px; opacity: 0.75; }
+.chip input:checked + label { background: var(--ink); color: var(--paper); }
+.chip input:focus-visible + label { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.slider-row { display: grid; gap: 6px; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.readout { font-size: 26px; line-height: 1; }
+input[type="range"] { width: 100%; accent-color: var(--ink); height: 28px; }
+input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.scale { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.7; }
+.hint { font-size: 12px; opacity: 0.75; margin: 0; }
+.dims { display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 8px; align-items: center; }
+.num {
+  font: inherit; font-size: 18px; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 6px 8px; width: 100%; min-width: 0;
+}
+.num:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.area-out { font-size: 14px; white-space: nowrap; }
+
+.status { justify-self: start; border: 2px solid currentColor; border-radius: 3px; padding: 3px 10px; font-size: 14px; letter-spacing: 0.12em; }
+.s-short, .s-none, .s-stop { color: var(--red); }
+.s-ok { color: var(--green); }
+.s-leaks { color: var(--blue); }
+.big { font-size: 40px; line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+.big .n { font-size: 56px; }
+.say { margin: 0; max-width: 60ch; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fact { border: 1.5px solid var(--ink); border-radius: 3px; padding: 8px; display: grid; gap: 2px; }
+.fact .k { font-size: 11px; letter-spacing: 0.1em; opacity: 0.75; }
+.fact .v { font-size: 22px; line-height: 1.1; }
+.callout { margin: 0; padding: 8px 10px; border-left: 4px solid var(--red); background: rgba(196, 54, 44, 0.07); }
+.callout.blue { border-left-color: var(--blue); background: rgba(63, 127, 191, 0.08); }
+.callout.green { border-left-color: var(--green); background: rgba(61, 148, 97, 0.08); }
+
+.figure { border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.35); border-radius: 3px; }
+.figure svg { display: block; width: 100%; height: auto; }
+
+.fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.products { display: grid; gap: 8px; }
+.product {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
+  color: var(--ink); text-decoration: none; background: var(--paper);
+}
+.product:hover { background: rgba(37, 38, 42, 0.05); }
+.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.product .pname { font-size: 15px; }
+.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
+.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+.paid { font-size: 11px; opacity: 0.7; }
+
+.funnel { display: grid; gap: 10px; }
+.btn {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--ink); color: var(--paper); text-decoration: none;
+  border-radius: 3px; padding: 12px 14px; font-size: 15px;
+}
+.btn.ghost { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.btn small { font-size: 12px; opacity: 0.8; }
+.teaser { border: 1.5px dashed var(--ink); border-radius: 3px; padding: 10px 12px; font-size: 13px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { border-bottom: 1px solid var(--rule); padding: 5px 6px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 400; letter-spacing: 0.08em; border-bottom: 1.5px solid var(--ink); }
+tr.here td { background: rgba(37, 38, 42, 0.08); }
+.table-wrap { overflow-x: auto; }
+
+footer { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: 12px; }
+footer p { margin: 0; max-width: 90ch; }
+
+.conds { display: grid; gap: 8px; }
+.chip.wide label { text-align: left; }
+.chips.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gauge { display: grid; gap: 4px; padding-top: 18px; }
+.gbar { position: relative; height: 20px; border: 1.5px solid var(--ink); border-radius: 2px; }
+.gbar .need { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(63, 127, 191, 0.35); border-right: 3px solid var(--ink); }
+.gbar .tick { position: absolute; top: -18px; bottom: -4px; border-left: 1.5px dashed var(--ink); font-size: 12px; z-index: 1; }
+.gbar .tick b { position: absolute; top: 0; left: 4px; font-weight: 400; }
+.gbar .tick.on { border-left: 2.5px solid var(--green); color: var(--green); }
+.glabel { display: flex; justify-content: space-between; font-size: 11px; opacity: .75; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="eyebrow"><a href="../">How Buildings Work · Free tools</a></div>
+    <h1>What size dehumidifier do I need?</h1>
+    <p class="lede">Tell it how big your basement is and how damp it gets. It gives you the size to buy on today's labels, and tells you when a dehumidifier isn't the fix.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h">Your basement</h2>
+
+      <fieldset>
+        <legend>How damp is it, without a dehumidifier?</legend>
+        <div class="conds" id="conds"></div>
+      </fieldset>
+
+      <div class="slider-row">
+        <span class="field-label" id="area-label">Floor size</span>
+        <div class="dims" role="group" aria-labelledby="area-label">
+          <input class="num" type="number" id="len" inputmode="decimal" min="1" max="200" value="36" aria-label="Length in feet">
+          <span>ft ×</span>
+          <input class="num" type="number" id="wid" inputmode="decimal" min="1" max="200" value="28" aria-label="Width in feet">
+          <span>ft</span>
+        </div>
+        <span class="area-out" id="area-out"></span>
+      </div>
+
+      <fieldset>
+        <legend>Ceiling height</legend>
+        <div class="chips four" id="heights"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Does water come in after rain or snowmelt?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="water" id="water-no" value="no" checked><label for="water-no">No</label></div>
+          <div class="chip"><input type="radio" name="water" id="water-yes" value="yes"><label for="water-yes">Yes, puddles or seepage</label></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Is a floor drain or sump close by?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="drain" id="drain-yes" value="yes" checked><label for="drain-yes">Yes</label></div>
+          <div class="chip"><input type="radio" name="drain" id="drain-no" value="no"><label for="drain-no">No</label></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Does it stay under 65°F most of the year?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="cool" id="cool-yes" value="yes" checked><label for="cool-yes">Yes, it's cool</label></div>
+          <div class="chip"><input type="radio" name="cool" id="cool-no" value="no"><label for="cool-no">No, it's warm</label></div>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="result-col panel" aria-live="polite" aria-labelledby="res-h">
+      <h2 id="res-h">The answer</h2>
+      <span class="status" id="status"></span>
+      <p class="big" id="big"></p>
+      <div class="facts" id="facts"></div>
+      <div class="gauge" id="gauge"></div>
+      <p class="say" id="say"></p>
+      <p class="callout" id="callout" hidden></p>
+      <div>
+        <h2 id="fix-h">What to do</h2>
+        <ol class="fixes" id="fixes" aria-labelledby="fix-h"></ol>
+      </div>
+      <div id="products-wrap">
+        <h2>What helps <span class="paid">(paid links)</span></h2>
+        <div class="products" id="products" style="margin-top:8px"></div>
+      </div>
+      <div class="funnel" id="funnel"></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="tbl-h">
+    <h2 id="tbl-h">The sizing chart behind it</h2>
+    <p class="say">ENERGY STAR's recommended capacity, in pints per day on today's labels. Your row is shaded.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Condition</th><th>Under 2,000 sq ft</th><th>Over 2,000 sq ft</th></tr></thead>
+        <tbody id="tbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>How it works: sizes come from ENERGY STAR's recommended capacity ranges. Under 500 sq ft the tool uses the low end of the range; from 500 to 2,000 sq ft it uses the high end, because basements run cool and cool air cuts what any unit really removes; over 2,000 sq ft it scales up with area. Ceilings over 8 ft add proportionally. Then it picks the next common size: 22, 35 or 50 pints. Today's labels use the DOE's 2019 test, so an older "70-pint" unit is about a 50 on today's scale.</p>
+    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>General guidance, not an inspection. The EPA suggests calling a professional for mold covering more than about 10 square feet.</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   SETTINGS: fill these in as things go live
+------------------------------------------------------------------- */
+const CONFIG = {
+  AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
+  EP_URL: "https://youtu.be/22YGYoxSjMY",      // "Why Your Basement Smells Musty"
+  CHANNEL_URL: "https://www.youtube.com/@mattrobertson00",
+  EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
+};
+
+/* ------------------------------------------------------------------
+   DATA
+   ENERGY STAR recommended capacity ranges, pints/day (current labels):
+                         small-medium (<2,000 sq ft)   large (>2,000 sq ft)
+   slightly-mod. damp    20-30                          30+
+   very damp             25-40                          40+
+   wet                   30-50                          50+
+   Tool rule: under 500 sq ft use the low end; 500-2,000 sq ft use the
+   high end (basements run cool, which cuts real output); over 2,000 sq ft
+   scale the large-room minimum by area / 2,000. Ceilings over 8 ft scale up
+   by height / 8. Pick the next common size: 22, 35, 50; past 50, a
+   whole-basement unit or more than one 50.
+------------------------------------------------------------------- */
+const CONDS = {
+  moderate: { name: "Slightly to moderately damp", sub: "Feels damp, musty smell that comes and goes", band: [20, 30], large: 30 },
+  very:     { name: "Very damp", sub: "Always smells damp; damp spots on walls or floor", band: [25, 40], large: 40 },
+  wet:      { name: "Wet", sub: "Walls or floor sweat or leak", band: [30, 50], large: 50 }
+};
+const HEIGHTS = { h7: { name: "7 ft", f: 1 }, h8: { name: "8 ft", f: 1 }, h9: { name: "9 ft", f: 9 / 8 }, h10: { name: "10 ft", f: 10 / 8 } };
+const SIZES = [22, 35, 50];
+
+function amazon(q) {
+  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
+  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
+}
+const PRODUCTS = {
+  d22:    { name: "22-pint dehumidifier", why: "Small and quiet, for a closet-size or lightly damp space.", q: "22 pint dehumidifier energy star" },
+  d35:    { name: "35-pint dehumidifier", why: "Mid-size. Look for ENERGY STAR and a hose outlet so you don't empty a bucket.", q: "35 pint dehumidifier energy star" },
+  d50:    { name: "50-pint dehumidifier", why: "The usual basement size on today's labels. Look for ENERGY STAR, auto-restart and a hose outlet.", q: "50 pint dehumidifier energy star" },
+  d50p:   { name: "50-pint dehumidifier with built-in pump", why: "Pumps the water up and out to a sink or window, so it works with no floor drain.", q: "50 pint dehumidifier with built in pump" },
+  whole:  { name: "Whole-basement dehumidifier", why: "A bigger, ducted or free-standing unit made to run all season in a large or wet basement.", q: "whole house basement dehumidifier" },
+  pump:   { name: "Condensate pump", why: "Add-on pump if your dehumidifier has a hose outlet but no drain nearby.", q: "condensate pump dehumidifier" },
+  hygro:  { name: "Digital hygrometer", why: "Check that the basement actually holds 50%. The dehumidifier's own reading is often off.", q: "digital hygrometer indoor" },
+  spout:  { name: "Downspout extensions", why: "Carry roof water 4 to 6 feet from the house, the cheapest fix for a wet basement.", q: "downspout extension" },
+  thermal:{ name: "Phone thermal camera", why: "Shows the cold, damp patches on basement walls and where outside air is leaking in.", q: "thermal camera for phone" }
+};
+
+const S = { cond: "very", len: 36, wid: 28, h: "h8", water: "no", drain: "yes", cool: "yes" };
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString("en-US");
+
+function needAt(c, area) {
+  const C = CONDS[c];
+  if (area < 500) return C.band[0];
+  if (area <= 2000) return C.band[1];
+  return C.large * area / 2000;
+}
+
+function chipsHTML(name, obj, cur, cls) {
+  return Object.entries(obj).map(([k, v]) =>
+    `<div class="chip ${cls || ""}"><input type="radio" name="${name}" id="${name}-${k}" value="${k}"${k === cur ? " checked" : ""}>` +
+    `<label for="${name}-${k}">${v.name}${v.sub ? `<small>${v.sub}</small>` : ""}</label></div>`).join("");
+}
+
+function product(k) {
+  const p = PRODUCTS[k];
+  return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
+    `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
+}
+
+function render() {
+  const area = Math.max(0, S.len) * Math.max(0, S.wid);
+  $("area-out").textContent = "= " + fmt(Math.round(area)) + " sq ft";
+  const C = CONDS[S.cond];
+  const newLoad = needAt(S.cond, area) * HEIGHTS[S.h].f;
+  const size = SIZES.find(s => s >= newLoad) || null;
+  const units = size ? 1 : Math.ceil(newLoad / 50);
+  const water = S.water === "yes";
+
+  let state = water ? "water" : (size ? "size" : "big");
+  const labels = { size: "Buy this size", big: "Too big for one", water: "Fix the water first" };
+  $("status").textContent = labels[state];
+  $("status").className = "status " + (state === "size" ? "s-ok" : state === "big" ? "s-leaks" : "s-short");
+
+  $("big").innerHTML = size
+    ? `<span class="n">${size}-pint</span> dehumidifier`
+    : `Whole-basement unit, or <span class="n">${units} × 50</span>`;
+
+  $("facts").innerHTML = [
+    ["ENERGY STAR range", area > 2000 ? `${C.large}+ pt/day` : `${C.band[0]}–${C.band[1]} pt/day`],
+    ["You need", `${Math.round(newLoad)} pt/day`],
+    ["Drain", S.drain === "yes" ? "Hose to drain" : "Needs a pump"]
+  ].map(([k, v]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+
+  // gauge
+  const max = 60, pct = v => (Math.min(v, max) / max * 100).toFixed(1) + "%";
+  $("gauge").innerHTML = `<div class="gbar">${SIZES.map(s => `<span class="tick${s === size ? " on" : ""}" style="left:${pct(s)}"><b>${s}</b></span>`).join("")}<span class="need" style="width:${pct(newLoad)}"></span></div><div class="glabel"><span>0</span><span>Pints per day, today's labels</span><span>60+</span></div>`;
+
+  const cond = CONDS[S.cond].name.toLowerCase();
+  let say = `ENERGY STAR's range for a ${cond} space ${area > 2000 ? "over" : "under"} 2,000 sq ft is ${area > 2000 ? C.large + "+" : C.band[0] + "–" + C.band[1]} pints a day. ${area < 500 ? "A small space like yours can use the low end" : area <= 2000 ? "A basement this size should buy for the high end, because cool basement air cuts what any unit really removes" : "At " + fmt(Math.round(area)) + " sq ft that scales to about " + Math.round(newLoad)}${HEIGHTS[S.h].f > 1 ? ", plus extra for the " + HEIGHTS[S.h].name + " ceiling" : ""}. `;
+  say += size ? `The next common size up is ${size} pints.` : `That's more than one 50-pint portable can keep up with.`;
+  $("say").textContent = say;
+
+  const co = $("callout");
+  if (water) {
+    co.hidden = false; co.className = "callout";
+    co.textContent = "A dehumidifier dries the air. It can't keep up with water coming through the walls or floor. Get the water away from the house first, then size the dehumidifier for what's left.";
+  } else if (S.cool === "yes") {
+    co.hidden = false; co.className = "callout blue";
+    co.textContent = "Cool basements are hard on dehumidifiers: the coil frosts up. Pick one rated for low temperatures with auto-defrost, and keep it off the floor where the air is coldest.";
+  } else co.hidden = true;
+
+  let fixes = [];
+  if (water) fixes.push(
+    "Extend every downspout 4 to 6 feet from the house.",
+    "Clean the gutters so they don't spill over at the corners.",
+    "Check the grading: the ground should fall about 6 inches in the first 10 feet away from the wall.",
+    "If water still comes in, have the drain tile and sump checked."
+  );
+  fixes.push(
+    "Set it to 50% and leave it running through the humid months. The EPA suggests keeping indoor humidity under 60%, ideally 30–50%.",
+    S.drain === "yes" ? "Run a hose to the floor drain or sump so it never stops for a full bucket." : "Get a model with a built-in pump, or add a condensate pump, and run the line to a sink or out a rim joist.",
+    "Keep basement windows closed on hot, humid days. Humid outdoor air condenses on cool basement walls.",
+    "Clean the filter every month or two, and give it a foot of space from walls.",
+    "Check with a hygrometer after a week. If it can't hold 50%, it's undersized or water is still getting in."
+  );
+  $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
+
+  let prods = [];
+  if (water) prods.push("spout");
+  if (!size) prods.push("whole", S.drain === "yes" ? "d50" : "d50p");
+  else if (size === 50) prods.push(S.drain === "yes" ? "d50" : "d50p");
+  else prods.push("d" + size);
+  if (S.drain === "no" && size && size < 50) prods.push("pump");
+  prods.push("hygro", "thermal");
+  $("products").innerHTML = prods.map(product).join("");
+
+  const ep = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
+  $("funnel").innerHTML = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Why your basement smells musty</span><small>${CONFIG.EP_URL ? "Episode 7" : "On the channel"}</small></a>` +
+    `<a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>` +
+    (CONFIG.EXPLORER_URL ? `<a class="btn" href="${CONFIG.EXPLORER_URL}" rel="noopener"><span>Explore every layer of a house</span><small>House Anatomy Explorer</small></a>`
+      : `<div class="teaser">Coming after Season 1: the House Anatomy Explorer. Tap through every layer of a house, from footing to shingles.</div>`);
+
+  $("tbl").innerHTML = Object.entries(CONDS).map(([k, c]) =>
+    `<tr class="${k === S.cond ? "here" : ""}"><td>${c.name}</td><td>${c.band[0]}–${c.band[1]}</td><td>${c.large}+</td></tr>`).join("");
+}
+
+/* ---------------- wiring ---------------- */
+$("conds").innerHTML = chipsHTML("cond", CONDS, S.cond, "wide");
+$("heights").innerHTML = chipsHTML("h", HEIGHTS, S.h);
+$("conds").addEventListener("change", e => { S.cond = e.target.value; render(); });
+$("heights").addEventListener("change", e => { S.h = e.target.value; render(); });
+["water", "drain", "cool"].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.addEventListener("change", e => { S[n] = e.target.value; render(); })));
+$("len").addEventListener("input", e => { S.len = +e.target.value || 0; render(); });
+$("wid").addEventListener("input", e => { S.wid = +e.target.value || 0; render(); });
+render();
+</script>
+</body>
+</html>
