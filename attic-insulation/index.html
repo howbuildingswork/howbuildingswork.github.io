@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Much Attic Insulation Do I Need?</title>
+<meta name="description" content="Measure your attic insulation, get your R-value, and see how many inches you need to add. Free tool from How Buildings Work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* How Buildings Work channel palette: drafting ink on cream trace paper */
+  --paper: #F3EFE4;
+  --ink: #25262A;
+  --red: #C4362C;
+  --green: #3D9461;
+  --blue: #3F7FBF;
+  --rule: rgba(37, 38, 42, 0.16);
+  --font: "Architects Daughter", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* layout: one drafting sheet; inputs and result side by side on desktop, result first on phones */
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.sheet { max-width: 1040px; margin: 0 auto; padding: 20px 16px 40px; display: grid; gap: 18px; }
+header { display: grid; gap: 4px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.12em; }
+.eyebrow a { color: var(--ink); }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; font-weight: 400; text-wrap: balance; }
+.lede { margin: 0; max-width: 62ch; }
+
+.layout { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.result-col { order: -1; }
+@media (min-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+  .result-col { order: 0; position: sticky; top: 16px; }
+}
+.panel { background: var(--paper); border: 2px solid var(--ink); border-radius: 3px; padding: 16px; display: grid; gap: 16px; }
+.panel h2 { font-size: 13px; letter-spacing: 0.12em; margin: 0; font-weight: 400; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+legend, .field-label { font-size: 13px; letter-spacing: 0.1em; padding: 0; margin-bottom: 6px; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.chips.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip label {
+  display: block; cursor: pointer; text-align: center; font-size: 14px;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 9px 8px; background: var(--paper);
+  transition: background 0.12s, color 0.12s; height: 100%;
+}
+.chip label small { display: block; font-size: 11px; opacity: 0.75; }
+.chip input:checked + label { background: var(--ink); color: var(--paper); }
+.chip input:focus-visible + label { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.slider-row { display: grid; gap: 6px; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.readout { font-size: 26px; line-height: 1; }
+input[type="range"] { width: 100%; accent-color: var(--ink); height: 28px; }
+input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.scale { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.7; }
+.hint { font-size: 12px; opacity: 0.75; margin: 0; }
+.dims { display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 8px; align-items: center; }
+.num {
+  font: inherit; font-size: 18px; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 6px 8px; width: 100%; min-width: 0;
+}
+.num:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.area-out { font-size: 14px; white-space: nowrap; }
+
+.status { justify-self: start; border: 2px solid currentColor; border-radius: 3px; padding: 3px 10px; font-size: 14px; letter-spacing: 0.12em; }
+.s-short, .s-none, .s-stop { color: var(--red); }
+.s-ok { color: var(--green); }
+.s-leaks { color: var(--blue); }
+.big { font-size: 40px; line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+.big .n { font-size: 56px; }
+.say { margin: 0; max-width: 60ch; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fact { border: 1.5px solid var(--ink); border-radius: 3px; padding: 8px; display: grid; gap: 2px; }
+.fact .k { font-size: 11px; letter-spacing: 0.1em; opacity: 0.75; }
+.fact .v { font-size: 22px; line-height: 1.1; }
+.callout { margin: 0; padding: 8px 10px; border-left: 4px solid var(--red); background: rgba(196, 54, 44, 0.07); }
+.callout.blue { border-left-color: var(--blue); background: rgba(63, 127, 191, 0.08); }
+.callout.green { border-left-color: var(--green); background: rgba(61, 148, 97, 0.08); }
+
+.figure { border: 1px solid var(--rule); background: rgba(255, 255, 255, 0.35); border-radius: 3px; }
+.figure svg { display: block; width: 100%; height: auto; }
+
+.fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.products { display: grid; gap: 8px; }
+.product {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
+  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
+  color: var(--ink); text-decoration: none; background: var(--paper);
+}
+.product:hover { background: rgba(37, 38, 42, 0.05); }
+.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.product .pname { font-size: 15px; }
+.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
+.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
+.paid { font-size: 11px; opacity: 0.7; }
+
+.funnel { display: grid; gap: 10px; }
+.btn {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--ink); color: var(--paper); text-decoration: none;
+  border-radius: 3px; padding: 12px 14px; font-size: 15px;
+}
+.btn.ghost { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.btn small { font-size: 12px; opacity: 0.8; }
+.teaser { border: 1.5px dashed var(--ink); border-radius: 3px; padding: 10px 12px; font-size: 13px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { border-bottom: 1px solid var(--rule); padding: 5px 6px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 400; letter-spacing: 0.08em; border-bottom: 1.5px solid var(--ink); }
+tr.here td { background: rgba(37, 38, 42, 0.08); }
+.table-wrap { overflow-x: auto; }
+
+footer { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: 12px; }
+footer p { margin: 0; max-width: 90ch; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <div class="eyebrow"><a href="../">How Buildings Work · Free tools</a></div>
+    <h1>How much attic insulation do I need?</h1>
+    <p class="lede">Measure how deep your attic insulation is, pick what kind it is, and get your R-value, your target, and how many inches to add.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="in-h">
+      <h2 id="in-h">Your attic</h2>
+
+      <fieldset>
+        <legend>What's up there now?</legend>
+        <div class="chips three" id="types"></div>
+        <p class="hint">Gray or white fluff: blown fiberglass. Gray paper-like flakes: cellulose. Rolls between the joists: batts. Shiny gray-brown pebbles: vermiculite.</p>
+      </fieldset>
+
+      <div class="slider-row" id="depth-row">
+        <div class="slider-head">
+          <label class="field-label" for="depth">How deep is it?</label>
+          <output class="readout" id="depth-read" for="depth">6 in.</output>
+        </div>
+        <input type="range" id="depth" min="0" max="24" step="0.5" value="6">
+        <div class="scale"><span>0 in.</span><span>12 in.</span><span>24 in.</span></div>
+        <p class="hint">Push a ruler straight down to the ceiling drywall in a few spots, away from the eaves, and use a typical reading.</p>
+      </div>
+
+      <fieldset>
+        <legend>Where do you live?</legend>
+        <div class="chips three" id="zones"></div>
+        <p class="hint">Minnesota is zones 6 and 7. Not sure? Search "climate zone map" plus your state.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Do you get ice dams or big icicles?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="dams" id="dams-yes" value="yes" checked><label for="dams-yes">Yes</label></div>
+          <div class="chip"><input type="radio" name="dams" id="dams-no" value="no"><label for="dams-no">No</label></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>What would you add?</legend>
+        <div class="chips">
+          <div class="chip"><input type="radio" name="add" id="add-cel" value="cellulose" checked><label for="add-cel">Blown cellulose<small>Thinner for the same R</small></label></div>
+          <div class="chip"><input type="radio" name="add" id="add-fg" value="fiberglass"><label for="add-fg">Blown fiberglass<small>Lighter, doesn't settle much</small></label></div>
+        </div>
+      </fieldset>
+
+      <div class="slider-row">
+        <span class="field-label" id="area-label">Attic floor size</span>
+        <div class="dims" role="group" aria-labelledby="area-label">
+          <input class="num" type="number" id="len" inputmode="decimal" min="1" max="200" value="40" aria-label="Length in feet">
+          <span>ft ×</span>
+          <input class="num" type="number" id="wid" inputmode="decimal" min="1" max="200" value="28" aria-label="Width in feet">
+          <span>ft</span>
+        </div>
+        <span class="area-out" id="area-out">= 1,120 sq ft</span>
+      </div>
+
+      <div class="slider-row">
+        <label class="field-label" for="cov">Bag coverage (optional)</label>
+        <input class="num" type="number" id="cov" inputmode="decimal" min="1" max="200" placeholder="Sq ft per bag, from the bag's chart">
+        <p class="hint" id="cov-hint">Every brand's bag is different. Find the chart on the bag, read the square feet per bag on the row the result names, and type it here.</p>
+      </div>
+    </section>
+
+    <section class="result-col panel" aria-live="polite" aria-labelledby="res-h">
+      <h2 id="res-h">The answer</h2>
+      <span class="status" id="status">Add more</span>
+      <p class="big" id="big"></p>
+      <div class="facts" id="facts"></div>
+      <div class="figure" id="figure"></div>
+      <p class="say" id="say"></p>
+      <p class="callout" id="callout" hidden></p>
+
+      <div>
+        <h2 id="fix-h">What to do, in order</h2>
+        <ol class="fixes" id="fixes" aria-labelledby="fix-h"></ol>
+      </div>
+
+      <div id="products-wrap">
+        <h2>What helps <span class="paid">(paid links)</span></h2>
+        <div class="products" id="products" style="margin-top:8px"></div>
+      </div>
+
+      <div class="funnel">
+        <a class="btn" id="ep-link" href="#" rel="noopener">
+          <span>Watch: Why you get ice dams (and icicles)</span><small id="ep-note">Episode 4</small>
+        </a>
+        <a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>
+        <a class="btn" id="explorer-link" href="#" rel="noopener" hidden>
+          <span>Explore every layer of a house</span><small>House Anatomy Explorer</small>
+        </a>
+        <div class="teaser" id="explorer-teaser">Coming after Season 1: the House Anatomy Explorer. Tap through every layer of a house, from footing to shingles.</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="tbl-h">
+    <h2 id="tbl-h">How deep is your target?</h2>
+    <p class="say" id="tbl-note"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Insulation</th><th>R per inch</th><th>Depth for target</th></tr></thead>
+        <tbody id="tbl"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8. R per inch uses the lower part of the published DOE ranges, so the tool errs toward adding a little more, not less. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
+    <p>As an Amazon Associate, How Buildings Work earns from qualifying purchases. Product links open an Amazon search, not one brand.</p>
+    <p>General guidance, not an inspection. Walk only on the joists, wear a mask, and keep insulation away from chimneys, flues and recessed lights that aren't rated for contact.</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   SETTINGS: fill these in as things go live
+------------------------------------------------------------------- */
+const CONFIG = {
+  AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
+  EP_URL: "https://youtu.be/WIH6uvSSIVs",      // "Why You Get Ice Dams (and Icicles)"
+  CHANNEL_URL: "https://www.youtube.com/@mattrobertson00",
+  EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
+};
+
+/* ------------------------------------------------------------------
+   PUBLISHED DATA
+   Targets: ENERGY STAR "Recommended Home Insulation R-Values", attic,
+   existing homes (2021 IECC basis). Uninsulated attic: R30 zone 1,
+   R49 zones 2-3, R60 zones 4-8; with 3-4 in. existing, add R25/R38/R49,
+   which lands on the same totals.
+   R per inch: lower part of DOE ranges (loose-fill fiberglass/mineral
+   wool 2.2-2.9, cellulose 3.1-3.8, batts 2.9-3.8, vermiculite ~2.1).
+   Cellulose settling ~20% (NREL loose-fill fact sheet).
+------------------------------------------------------------------- */
+const ZONES = {
+  z1:  { name: "Zone 1", sub: "S. Florida, Hawaii", target: 30 },
+  z23: { name: "Zones 2–3", sub: "South, SW, coastal CA", target: 49 },
+  z48: { name: "Zones 4–8", sub: "Midwest, North, MN", target: 60 }
+};
+const TYPES = {
+  fiberglass: { name: "Blown fiberglass", rpi: 2.5 },
+  cellulose:  { name: "Blown cellulose",  rpi: 3.2 },
+  batts:      { name: "Batts",            rpi: 3.1 },
+  rockwool:   { name: "Rock wool",        rpi: 2.8 },
+  vermiculite:{ name: "Vermiculite",      rpi: 2.1 },
+  none:       { name: "Nothing",          rpi: 0 }
+};
+const ADD = {
+  cellulose:  { name: "Blown cellulose",  rpi: 3.2, settle: 1.20 },
+  fiberglass: { name: "Blown fiberglass", rpi: 2.5, settle: 1.03 }
+};
+const CHART_ROWS = [11, 13, 19, 22, 26, 30, 38, 44, 49, 60]; // common rows on bag charts
+
+/* ---------------- products ---------------- */
+function amazon(q) {
+  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
+  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
+}
+const PRODUCTS = {
+  rulers:  { name: "Attic insulation depth rulers", why: "Staple a few to the joists before blowing so you can see you hit the depth everywhere.", q: "attic insulation depth ruler" },
+  baffles: { name: "Rafter vent baffles", why: "One in every rafter bay at the eaves keeps the new insulation from burying your soffit vents.", q: "attic rafter vent baffles" },
+  foam:    { name: "Gap-filling spray foam", why: "Seals the holes for wires and pipes in the top plates, the leaks that actually melt the snow.", q: "spray foam insulation gaps and cracks" },
+  fireblock: { name: "Fire-block sealant", why: "For gaps around flues and plumbing chases where regular foam isn't allowed.", q: "fire block foam sealant" },
+  hatch:   { name: "Attic hatch insulation cover", why: "The hatch is usually the biggest single hole in the ceiling. Cover it and weatherstrip the frame.", q: "attic hatch insulation cover" },
+  rake:    { name: "Roof snow rake", why: "For the ice dams you have this winter. Pull the bottom 3 to 4 feet of snow off from the ground. Never climb an icy roof.", q: "roof snow rake" },
+  thermal: { name: "Phone thermal camera", why: "Shows the warm streaks where heat leaks into the attic, and the cold spots in walls and ceilings below.", q: "thermal camera for phone" }
+};
+
+/* ---------------- state ---------------- */
+const S = { type: "fiberglass", depth: 6, zone: "z48", dams: "yes", add: "cellulose", len: 40, wid: 28, cov: null };
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString("en-US");
+const r1 = n => Math.round(n * 2) / 2;   // nearest half inch
+
+function chips(containerId, name, obj, current, sub) {
+  $(containerId).innerHTML = Object.entries(obj).map(([k, v]) =>
+    `<div class="chip"><input type="radio" name="${name}" id="${name}-${k}" value="${k}"${k === current ? " checked" : ""}>` +
+    `<label for="${name}-${k}">${v.name}${sub && v.sub ? `<small>${v.sub}</small>` : ""}</label></div>`
+  ).join("");
+}
+
+/* ---------------- drawing ---------------- */
+function atticSVG(state, haveIn, addInInstalled, targetIn, type) {
+  const ink = "#25262A", red = "#C4362C", green = "#3D9461", blue = "#3F7FBF";
+  const x0 = 40, x1 = 360, ceil = 210;      // ceiling line (top of drywall)
+  const scale = 4.5;                         // px per inch
+  const cap = 26;                            // draw up to 26 in.
+  const hY = ceil - Math.min(haveIn, cap) * scale;
+  const addTop = ceil - Math.min(haveIn + addInInstalled, cap) * scale;
+  const tY = ceil - Math.min(targetIn, cap) * scale;
+  let g = "";
+  // roof slope + eave
+  const roof = `M10 ${ceil - 10} L200 18 L390 ${ceil - 10}`;
+  g += `<path d="M10 ${ceil - 2} L200 26 L390 ${ceil - 2}" fill="none" stroke="${ink}" stroke-width="1" opacity=".6"/>`;
+  // baffle at eaves
+  g += `<path d="M30 ${ceil - 6} L78 ${ceil - 40}" stroke="${blue}" stroke-width="2"/><path d="M370 ${ceil - 6} L322 ${ceil - 40}" stroke="${blue}" stroke-width="2"/>`;
+  // drywall + joists
+  g += `<rect x="${x0 - 20}" y="${ceil}" width="${x1 - x0 + 40}" height="5" fill="#F3EFE4" stroke="${ink}" stroke-width="1.4"/>`;
+  for (let x = x0 + 10; x < x1; x += 48) g += `<rect x="${x}" y="${ceil - 33}" width="8" height="33" fill="url(#wood)" stroke="${ink}" stroke-width="1.2"/>`;
+  // existing insulation (clipped to the roof)
+  g += `<g clip-path="url(#underroof)">`;
+  if (haveIn > 0) g += `<rect x="${x0}" y="${hY}" width="${x1 - x0}" height="${ceil - hY}" fill="${type === "vermiculite" ? "url(#verm)" : "url(#fluff)"}" stroke="${ink}" stroke-width="1.2"/>`;
+  // added layer
+  if (addInInstalled > 0.01) g += `<rect x="${x0}" y="${addTop}" width="${x1 - x0}" height="${hY - addTop}" fill="url(#add)" stroke="${red}" stroke-width="1.6" stroke-dasharray="6 4"/>`;
+  g += `</g>`;
+  g += `<path d="${roof}" fill="none" stroke="${ink}" stroke-width="2.2"/>`;
+  // target line
+  g += `<line x1="${x0 - 14}" y1="${tY}" x2="${x1 + 14}" y2="${tY}" stroke="${state === "ok" || state === "leaks" ? green : red}" stroke-width="2"/>`;
+  // ruler
+  let ru = `<rect x="378" y="${ceil - cap * scale}" width="10" height="${cap * scale}" fill="#F3EFE4" stroke="${ink}" stroke-width="1"/>`;
+  for (let i = 0; i <= cap; i += 2) ru += `<line x1="378" y1="${ceil - i * scale}" x2="${i % 6 === 0 ? 388 : 383}" y2="${ceil - i * scale}" stroke="${ink}" stroke-width="1"/>`;
+  // warm air leak arrows when ice dams
+  let leaks = "";
+  if (state === "leaks" || (state === "short" && S.dams === "yes")) {
+    [120, 250].forEach(x => {
+      leaks += `<path d="M${x} ${ceil + 2} C${x - 8} ${ceil - 40} ${x + 10} ${ceil - 80} ${x} ${ceil - 120}" fill="none" stroke="${red}" stroke-width="2" stroke-dasharray="4 4"/>`;
+      leaks += `<path d="M${x - 5} ${ceil - 112} L${x} ${ceil - 122} L${x + 5} ${ceil - 112}" fill="none" stroke="${red}" stroke-width="2"/>`;
+    });
+  }
+  const L = 11;
+  let t = "";
+  t += `<text x="${x0}" y="${tY - 6}" font-size="${L}" fill="${state === "ok" || state === "leaks" ? green : red}">TARGET ${r1(targetIn)}"</text>`;
+  if (haveIn > 0) t += `<text x="${x0 + 6}" y="${Math.min(ceil - 6, hY + 14)}" font-size="${L}" fill="${ink}">NOW ${haveIn}"</text>`;
+  if (addInInstalled > 0.01) t += `<text x="${x1 - 6}" y="${Math.max(addTop + 14, 40)}" font-size="${L}" fill="${red}" text-anchor="end">ADD ${r1(addInInstalled)}"</text>`;
+  if (state === "leaks" || (state === "short" && S.dams === "yes")) t += `<text x="135" y="${ceil - 126}" font-size="${L}" fill="${red}">WARM AIR LEAKS</text>`;
+  t += `<text x="22" y="${ceil + 20}" font-size="${L}" fill="${blue}">BAFFLE</text>`;
+  t += `<text x="${(x0 + x1) / 2}" y="${ceil + 20}" font-size="${L}" fill="${ink}" text-anchor="middle">CEILING</text>`;
+
+  return `<svg viewBox="0 0 400 236" role="img" aria-label="Section through the attic showing current and needed insulation depth">
+    <defs>
+      <clipPath id="underroof"><path d="M14 ${ceil - 4} L200 30 L386 ${ceil - 4} L386 ${ceil} L14 ${ceil}Z"/></clipPath>
+      <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2"/></filter>
+      <pattern id="fluff" width="12" height="8" patternUnits="userSpaceOnUse"><rect width="12" height="8" fill="rgba(217,165,32,.18)"/><path d="M0 6 Q3 2 6 6 T12 6" fill="none" stroke="${ink}" stroke-width=".7" opacity=".5"/></pattern>
+      <pattern id="verm" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(140,120,90,.25)"/><circle cx="3" cy="3" r="1.4" fill="${ink}" opacity=".45"/></pattern>
+      <pattern id="add" width="12" height="8" patternUnits="userSpaceOnUse"><rect width="12" height="8" fill="rgba(196,54,44,.08)"/><path d="M0 6 Q3 2 6 6 T12 6" fill="none" stroke="${red}" stroke-width=".7" opacity=".55"/></pattern>
+      <pattern id="wood" width="4" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#E8D9BC"/><line x1="2" y1="0" x2="2" y2="10" stroke="${ink}" stroke-width=".4" opacity=".5"/></pattern>
+    </defs>
+    <g filter="url(#wob)">${g}${leaks}</g>
+    ${ru}
+    <g font-family="Architects Daughter, cursive" letter-spacing=".5">${t}</g>
+  </svg>`;
+}
+
+/* ---------------- logic ---------------- */
+function compute() {
+  const ty = TYPES[S.type], z = ZONES[S.zone], ad = ADD[S.add];
+  const area = Math.max(0, S.len) * Math.max(0, S.wid);
+  const haveIn = S.type === "none" ? 0 : S.depth;
+  const haveR = Math.round(haveIn * ty.rpi);
+  const target = z.target;
+  const needR = Math.max(0, target - haveR);
+  const settledIn = needR / ad.rpi;
+  const installedIn = settledIn * ad.settle;
+  const finalIn = haveIn + settledIn;
+  const chartRow = CHART_ROWS.find(r => r >= needR) || 60;
+  let state;
+  if (S.type === "vermiculite") state = "stop";
+  else if (haveIn === 0) state = "none";
+  else if (needR <= 2) state = S.dams === "yes" ? "leaks" : "ok";
+  else state = "short";
+  const bags = S.cov && needR > 2 ? Math.ceil(area / S.cov) : null;
+  return { ty, z, ad, area, haveIn, haveR, target, needR, settledIn, installedIn, finalIn, chartRow, state, bags };
+}
+
+function render() {
+  const c = compute();
+  $("depth-read").textContent = c.haveIn + " in.";
+  $("depth-row").hidden = S.type === "none";
+  $("area-out").textContent = "= " + fmt(Math.round(c.area)) + " sq ft";
+
+  const labels = { short: "Add more", none: "No insulation", ok: "You're there", leaks: "Air leaks", stop: "Stop: test first" };
+  $("status").textContent = labels[c.state];
+  $("status").className = "status s-" + c.state;
+
+  let big = "", say = "", callout = null, calloutClass = "", fixes = [], prods = [];
+  const add = r1(c.installedIn), settled = r1(c.settledIn);
+  const settleNote = S.add === "cellulose" ? ` It settles to about ${settled} in.` : "";
+
+  if (c.state === "short" || c.state === "none") {
+    big = `Add about <span class="n">${add} in.</span>`;
+    say = c.state === "none"
+      ? `With nothing up there, you need the full R-${c.target}: blow ${add} in. of ${c.ad.name.toLowerCase()}.${settleNote}`
+      : `${c.haveIn} in. of ${c.ty.name.toLowerCase()} is about R-${c.haveR}. To reach R-${c.target}, add R-${c.needR}: blow ${add} in. of ${c.ad.name.toLowerCase()} on top.${settleNote}`;
+    if (S.dams === "yes") {
+      callout = "Insulation alone won't stop ice dams. Warm air leaking up through the ceiling melts the snow. Seal those holes first, then add insulation on top, or you'll bury the leaks where you can't reach them.";
+      calloutClass = "";
+    }
+    fixes = [
+      "Ask your utility about a home energy audit first. Many offer rebates on air sealing and insulation.",
+      "Seal the leaks: wire and pipe holes in the top plates, the plumbing chase, gaps around recessed lights and the bath fan.",
+      "Put a baffle in every rafter bay at the eaves so the soffit vents stay open.",
+      "Weatherstrip and insulate the attic hatch.",
+      `Staple depth rulers to the joists, then blow ${add} in. of ${c.ad.name.toLowerCase()}.`,
+      "Keep insulation back from the chimney, flues and any recessed light not rated for contact."
+    ];
+    prods = S.dams === "yes" ? ["foam", "baffles", "hatch", "rulers", "thermal", "rake"] : ["foam", "baffles", "rulers", "hatch", "thermal"];
+  } else if (c.state === "ok") {
+    big = `About <span class="n">R-${c.haveR}</span>`;
+    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} meets the R-${c.target} target. Adding more won't pay you back much.`;
+    callout = "Check the eaves: insulation should not block the soffit vents, and every bay should have a baffle.";
+    calloutClass = "green";
+    fixes = [
+      "Check the depth in a few more spots. Low spots near the hatch and eaves are common.",
+      "Seal any gaps you can still reach around pipes, wires and the hatch.",
+      "Check this again if you ever see ice dams or frost on the roof nails."
+    ];
+    prods = ["thermal", "hatch"];
+  } else if (c.state === "leaks") {
+    big = `Depth isn't your problem`;
+    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} is about R-${c.haveR}, at the R-${c.target} target. If you still get ice dams, warm air is getting past the insulation. Insulation slows heat, but it doesn't stop air.`;
+    callout = "Look for the leaks: dark, dirty spots in the insulation (air carries dust through it), frost on roof nails over a room, the hatch, recessed lights and the bath fan duct.";
+    calloutClass = "blue";
+    fixes = [
+      "Pull back the insulation at the dirty spots and seal the holes under them with foam or fire-block sealant.",
+      "Seal and insulate the attic hatch.",
+      "Check that the bath fan duct runs all the way outside, not just into the attic.",
+      "Make sure soffit vents are open and baffles are in every bay.",
+      "For this winter's dams, rake the bottom of the roof from the ground."
+    ];
+    prods = ["foam", "fireblock", "hatch", "thermal", "rake"];
+  } else if (c.state === "stop") {
+    big = `Don't touch it yet`;
+    say = "Vermiculite can contain asbestos. The EPA says to assume it might, leave it undisturbed, and have it tested or handled by a professional before any attic work.";
+    callout = "Don't store things in the attic, don't walk through it, and don't blow new insulation over it until you know.";
+    calloutClass = "";
+    fixes = [
+      "Keep people out of the attic and seal gaps in the ceiling below it if you can do so without disturbing it.",
+      "Hire an accredited asbestos inspector to test it.",
+      "If it tests positive, get quotes from licensed abatement contractors before insulating."
+    ];
+    prods = [];
+  }
+
+  $("big").innerHTML = big;
+  $("say").textContent = say;
+  const co = $("callout");
+  co.hidden = !callout;
+  if (callout) { co.textContent = callout; co.className = "callout " + calloutClass; }
+
+  const facts = c.state === "stop" ? [] : [
+    ["You have", c.haveIn ? `R-${c.haveR}` : "R-0"],
+    ["Target", `R-${c.target}`],
+    ["Bags", c.bags !== null ? fmt(c.bags) : (c.needR > 2 ? `R-${c.chartRow} row` : "None")]
+  ];
+  $("facts").hidden = facts.length === 0;
+  $("facts").innerHTML = facts.map(([k, v]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+  $("cov-hint").textContent = c.needR > 2
+    ? `Every brand's bag is different. On the bag's chart, find the R-${c.chartRow} row (the first row at or above the R-${c.needR} you're adding), read the square feet per bag, and type it here.`
+    : "You don't need to add insulation, so no bags to count.";
+
+  const targetIn = c.haveIn + (c.needR > 0 ? c.settledIn : 0);
+  const tIn = c.state === "ok" || c.state === "leaks" ? c.target / c.ty.rpi : targetIn;
+  $("figure").innerHTML = atticSVG(c.state, c.haveIn, c.state === "short" || c.state === "none" ? c.installedIn : 0, Math.max(tIn, 0.1), S.type);
+
+  $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
+  $("products-wrap").hidden = prods.length === 0;
+  $("products").innerHTML = prods.map(k => {
+    const p = PRODUCTS[k];
+    return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
+      `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
+  }).join("");
+
+  // depth table
+  const rows = [
+    ["Blown cellulose (settled)", 3.2], ["Fiberglass batts", 3.1], ["Rock wool", 2.8], ["Blown fiberglass", 2.5]
+  ];
+  $("tbl").innerHTML = rows.map(([n, rpi]) =>
+    `<tr class="${(S.add === "cellulose" && n.startsWith("Blown cel")) || (S.add === "fiberglass" && n === "Blown fiberglass") ? "here" : ""}"><td>${n}</td><td>R-${rpi}</td><td>${r1(c.target / rpi)} in.</td></tr>`
+  ).join("");
+  $("tbl-note").textContent = `Total depth for R-${c.target} (${c.z.name}) with one material. Mixed layers add up: R per inch × inches, for each layer.`;
+}
+
+function links() {
+  $("ep-link").href = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
+  $("ep-note").textContent = CONFIG.EP_URL ? "Episode 4" : "On the channel";
+  if (CONFIG.EXPLORER_URL) {
+    $("explorer-link").href = CONFIG.EXPLORER_URL;
+    $("explorer-link").hidden = false;
+    $("explorer-teaser").hidden = true;
+  }
+}
+
+/* ---------------- wiring ---------------- */
+chips("types", "type", TYPES, S.type, false);
+chips("zones", "zone", ZONES, S.zone, true);
+$("types").addEventListener("change", e => { S.type = e.target.value; render(); });
+$("zones").addEventListener("change", e => { S.zone = e.target.value; render(); });
+document.querySelectorAll('input[name="dams"]').forEach(r => r.addEventListener("change", e => { S.dams = e.target.value; render(); }));
+document.querySelectorAll('input[name="add"]').forEach(r => r.addEventListener("change", e => { S.add = e.target.value; render(); }));
+$("depth").addEventListener("input", e => { S.depth = +e.target.value; render(); });
+$("len").addEventListener("input", e => { S.len = +e.target.value || 0; render(); });
+$("wid").addEventListener("input", e => { S.wid = +e.target.value || 0; render(); });
+$("cov").addEventListener("input", e => { const v = +e.target.value; S.cov = v > 0 ? v : null; render(); });
+links();
+render();
+</script>
+</body>
+</html>
