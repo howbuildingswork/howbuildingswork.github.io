@@ -4,7 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How Much Attic Insulation Do I Need?</title>
-<meta name="description" content="Measure your attic insulation, get your R-value, and see how many inches you need to add. Free tool from How Buildings Work.">
+<meta name="description" content="Measure your attic insulation, get your R-value, and see how many inches to add. Then read why ice dams start in the attic, not the roof, and the fixes in the order that works. Free, from an architect.">
+<link rel="canonical" href="https://howbuildingswork.github.io/attic-insulation/">
+<meta property="og:title" content="How Much Attic Insulation Do I Need? (and why your icicles are costing you money)">
+<meta property="og:description" content="Free attic insulation calculator plus the full Episode 4 explainer: how ice dams form, where the heat gets in, and what to do in order.">
+<meta property="og:image" content="https://howbuildingswork.github.io/attic-insulation/img/ep4-ice-dam-section.jpg">
+<meta property="og:type" content="article">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"Article","headline":"Those icicles are costing you money: why ice dams start in the attic, not the roof","author":{"@type":"Organization","name":"How Buildings Work","url":"https://www.youtube.com/@mattrobertson00"},"publisher":{"@type":"Organization","name":"How Buildings Work"},"image":"https://howbuildingswork.github.io/attic-insulation/img/ep4-ice-dam-section.jpg","mainEntityOfPage":"https://howbuildingswork.github.io/attic-insulation/","datePublished":"2026-10-31"},
+ {"@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Why do I get ice dams?","acceptedAnswer":{"@type":"Answer","text":"Heat leaking from the house warms the attic and the roof deck, melting the bottom layer of snow. The water runs down to the eave, which overhangs the cold outdoors, and refreezes there into a ridge of ice. Melt water then pools behind the ridge and backs up under the shingles."}},
+  {"@type":"Question","name":"How much attic insulation do I need?","acceptedAnswer":{"@type":"Answer","text":"ENERGY STAR's targets for existing homes are R-30 in climate zone 1, R-49 in zones 2 to 3, and R-60 in zones 4 to 8. R-60 is roughly 18 to 24 inches of blown insulation depending on the material. If you can see the tops of your ceiling joists, you don't have enough."}},
+  {"@type":"Question","name":"What is the right order to fix ice dams?","acceptedAnswer":{"@type":"Answer","text":"Seal the air leaks in the ceiling first, then add insulation, then make sure the attic is ventilated from soffit to ridge. Insulation piled on top of air leaks lets warm air pass through it. Roof rakes help this winter; heat cables treat the symptom; ice and water shield at the eaves protects the house when you re-roof."}}
+ ]}
+]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
@@ -134,12 +149,35 @@ tr.here td { background: rgba(37, 38, 42, 0.08); }
 
 footer { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; font-size: 12px; }
 footer p { margin: 0; max-width: 90ch; }
+/* ---------------- article (episode text under the calculator) ---------------- */
+.article { text-transform: none; letter-spacing: 0.01em; font-size: 17px; line-height: 1.6; gap: 18px; }
+.article > * { width: 100%; max-width: 70ch; margin-inline: auto; }
+.article .art-head { display: grid; gap: 6px; }
+.kicker, .art-byline, .art-fine, .article figcaption, .article h2, .article h3 { text-transform: uppercase; }
+.kicker { font-size: 12px; letter-spacing: 0.14em; opacity: 0.75; }
+.art-title { font-size: 26px !important; line-height: 1.2; border: 0 !important; padding: 0 !important; letter-spacing: 0.02em !important; text-wrap: balance; }
+.art-byline { margin: 0; font-size: 12px; letter-spacing: 0.08em; opacity: 0.8; }
+.article h3 { font-size: 14px; letter-spacing: 0.12em; font-weight: 400; margin: 10px 0 0; border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
+.article p { margin: 0; }
+.article a { color: var(--blue); }
+.article figure { margin: 4px 0; display: grid; gap: 6px; }
+.article img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; }
+.article figcaption { font-size: 12px; letter-spacing: 0.08em; opacity: 0.75; }
+.video { position: relative; aspect-ratio: 16 / 9; border: 2px solid var(--ink); border-radius: 3px; overflow: hidden; background: var(--ink); max-width: 100%; }
+.video iframe, .video-poster { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-poster { padding: 0; margin: 0; background: var(--ink); cursor: pointer; display: grid; place-items: center; }
+.video-poster img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; opacity: 0.85; }
+.video-poster .play { position: relative; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; border: 2px solid var(--ink); border-radius: 3px; padding: 10px 16px; }
+.video-poster:hover .play { background: var(--red); color: var(--paper); border-color: var(--red); }
+.video-poster:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+.art-tools h2 { margin-bottom: 8px; }
+.art-fine { font-size: 12px; opacity: 0.75; letter-spacing: 0.06em; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="sheet">
+<div class="sheet" id="top">
   <header>
     <div class="eyebrow"><a href="../">How Buildings Work · Free tools</a></div>
     <h1>How much attic insulation do I need?</h1>
@@ -229,6 +267,7 @@ footer p { margin: 0; max-width: 90ch; }
         <a class="btn" id="ep-link" href="#" rel="noopener">
           <span>Watch: Why you get ice dams (and icicles)</span><small id="ep-note">Episode 4</small>
         </a>
+        <a class="btn ghost" href="#article"><span>Read: why ice dams start in the attic</span><small>7-minute read, below</small></a>
         <a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>
         <a class="btn" id="explorer-link" href="#" rel="noopener" hidden>
           <span>Explore every layer of a house</span><small>House Anatomy Explorer</small>
@@ -248,6 +287,110 @@ footer p { margin: 0; max-width: 90ch; }
       </table>
     </div>
   </section>
+
+  <article class="panel article" id="article" aria-labelledby="art-h">
+    <div class="art-head">
+      <span class="kicker">From Episode 4 · Read it or watch it</span>
+      <h2 id="art-h" class="art-title">Those icicles are costing you money: why ice dams start in the attic, not the roof</h2>
+      <p class="art-byline">By a Minnesota architect with thirty years in the business, who just had his own attic redone. About a seven-minute read.</p>
+    </div>
+
+    <div class="video" id="video">
+      <button class="video-poster" id="video-play" type="button" aria-label="Play Episode 4: Why you get ice dams (and icicles)">
+        <img src="img/ep4-ice-dam-section.jpg" alt="House section with a warm red attic melting snow into an ice dam at the eave" loading="lazy" width="1280" height="714">
+        <span class="play">▶&nbsp; Watch Episode 4 · 9 min</span>
+      </button>
+    </div>
+
+    <p>Every winter people post pictures of their icicles like they're something to be proud of. They're not. A row of big icicles on your gutter is a sign that your house is heating the roof, and heat on your roof is heat you paid for.</p>
+    <p>Here's the part most people get wrong. Ice dams aren't a roof problem. They start in the attic. Call a roofer and you'll get a new roof that does the same thing next winter. If you live anywhere it snows, and especially if your house was built before the 1990s, here is how an ice dam forms, where the heat is sneaking out of your house, and the fixes in the order that actually works.</p>
+
+    <figure>
+      <img src="img/ep4-icicles.jpg" alt="Hand-drawn sketch of a house eave in winter with a row of long icicles hanging from the gutter" loading="lazy" width="1280" height="714">
+      <figcaption>Icicles are the overflow. The dam that made them is sitting on the roof edge behind them.</figcaption>
+    </figure>
+
+    <h3>How an ice dam forms</h3>
+    <p>Start with a roof covered in snow. On a cold day, say ten degrees outside, that snow should just sit there.</p>
+    <p>But the attic underneath isn't ten degrees. Warm air from the house is leaking up into it, and heat is soaking through the ceiling. So the attic is thirty-five, forty degrees. That warms the roof deck from below, and the bottom layer of snow starts to melt, even though it's freezing outside.</p>
+    <p>That water runs down the roof, under the snow, until it reaches the eave. And the eave is the one part of the roof that's not over the warm attic. It hangs out past the wall, over the cold outdoors. So the water hits that cold edge and freezes.</p>
+    <p>Do that every day for a few weeks and you build a ridge of ice along the edge of the roof. That's the dam. Now the melt water coming down behind it has nowhere to go. It pools.</p>
+    <p>Shingles are built to shed water running downhill. They are not built to hold back a pond. So the water backs up under the shingles, through the roof deck, and into your wall or ceiling. That's the brown stain in the corner of an upstairs bedroom in February. The icicles are just the overflow.</p>
+
+    <figure>
+      <img src="img/ep4-ice-dam-section.jpg" alt="Section through a house: red arrows of warm air rising into the attic, blue melt water running under the snow, an ice ridge at the eave, and water backing up under the shingles into the wall" loading="lazy" width="1280" height="714">
+      <figcaption>The whole mechanism in one drawing: warm attic, melt water under the snow, ice at the cold overhang, and a pond backing up under the shingles.</figcaption>
+    </figure>
+
+    <h3>What it's actually costing you</h3>
+    <p>Every bit of snow melting on your roof was melted by heat from your furnace. You're paying to heat the outdoors.</p>
+    <p>You can see it from the street. The morning after a snowfall, look at the roofs on your block. A well-insulated house keeps an even blanket of snow for days. A leaky one shows bare patches, melted stripes, and a crown of icicles. Same street, same weather, very different heating bills.</p>
+    <p>And the leak isn't small. ENERGY STAR puts the typical savings from sealing air leaks and adding insulation, mostly in the attic, at around fifteen percent of a home's heating and cooling costs. In an older house in a cold climate it can be a lot more. That's the money the icicles are pointing at.</p>
+    <p>Then there's the damage. A leaking ice dam can soak insulation, rot the roof deck, stain ceilings, and grow mold inside walls where you won't see it until spring.</p>
+
+    <figure>
+      <img src="img/ep4-two-roofs.jpg" alt="Two neighboring houses after a snowfall: one roof evenly white, the other with bare melted patches and icicles at the gutter" loading="lazy" width="1280" height="714">
+      <figcaption>Same storm, same street. The roof on the right is showing you its heating bill.</figcaption>
+    </figure>
+
+    <h3>Where the heat gets in</h3>
+    <p>Heat gets into an attic three ways. Fix them in this order, because the order matters.</p>
+    <p><strong>One: air leaks.</strong> This is the big one, and the one people skip. Warm air rises, and your house is full of holes in its ceiling: recessed lights, the bathroom fan, plumbing pipes and wires coming up through the top of the walls, the chimney chase, the attic hatch itself. Each one is small. Together they can add up to the same as leaving a window open all winter. And that warm air carries moisture, which turns to frost on the underside of your roof.</p>
+
+    <figure>
+      <img src="img/ep4-air-leaks.jpg" alt="Attic floor seen from above with red wisps of warm air rising around a recessed light, a bath fan, a pipe, a wire, and the edges of the attic hatch" loading="lazy" width="1280" height="714">
+      <figcaption>The holes in your ceiling. Insulation piled on top of these just filters the warm air on its way out.</figcaption>
+    </figure>
+
+    <p><strong>Two: not enough insulation.</strong> A lot of older houses have six inches or less up there, sometimes less than that, packed down and dirty after decades. Current code for new homes in Minnesota calls for at least R-49, which is roughly fifteen to eighteen inches of blown insulation. If you can see the tops of your ceiling joists, you don't have enough. <a href="#top">The calculator at the top of this page</a> turns your depth and insulation type into an R-value and tells you how many inches to add.</p>
+
+    <figure>
+      <img src="img/ep4-insulation-depth.jpg" alt="Two cut views of an attic floor with rulers: a thin compressed layer barely covering the joists next to a deep fluffy layer well above them" loading="lazy" width="1280" height="714">
+      <figcaption>If you can see the joists, you're on the left. The target in most of the country is the one on the right.</figcaption>
+    </figure>
+
+    <p><strong>Three: ventilation.</strong> A cold attic needs outdoor air moving through it: in at the soffits, under the eave, and out at the ridge or roof vents. That keeps the roof deck close to the outdoor temperature. The common mistake is insulation stuffed right up into the eave, blocking the soffit vents. The fix is a baffle, a simple foam or cardboard channel that holds the insulation back and keeps the air path open.</p>
+
+    <figure>
+      <img src="img/ep4-soffit-baffle.jpg" alt="Two eave sections: insulation stuffed into the eave blocking the soffit vent, marked with a red X, next to a foam baffle keeping an air channel open, marked with a green check" loading="lazy" width="1280" height="714">
+      <figcaption>Left: the soffit vent is buried. Right: a baffle keeps the channel open from soffit to ridge.</figcaption>
+    </figure>
+
+    <p>Why that order? Because if you pile insulation on top of air leaks, the warm air flows up through the fluffy insulation like it isn't there. And ventilation can't keep up with a house that's pumping heat into the attic. Seal first. Then insulate. Then make sure it can breathe.</p>
+
+    <h3>What to do this winter, and what not to do</h3>
+    <p>You can't fix an attic in a snowstorm, so start with the roof you have.</p>
+    <p><strong>A roof rake is fine.</strong> It's a long-handled scraper you use from the ground to pull the snow off the bottom three or four feet of roof. No snow on the edge, no melt water to refreeze. It's cheap and it works. Stay on the ground, and watch for power lines.</p>
+    <p><strong>Don't chip the ice off</strong> with a hammer or an axe. You'll tear up the shingles and gutters, and you're on a ladder over ice.</p>
+    <p><strong>Heat cables</strong>, the zigzag wires along the roof edge, will melt a channel for the water to escape. They can save you from a leak. But they don't fix anything. They run on electricity all winter to treat a heat leak with more heat. Think of them as a band-aid, not a cure.</p>
+    <p><strong>When you replace the roof</strong>, make sure it gets ice and water shield along the eaves. That's a rubbery membrane under the shingles at the edge, and in Minnesota code requires it from the edge to at least two feet inside the wall line. It won't stop an ice dam from forming, but it stops the water from getting into the house when one does.</p>
+
+    <h3>The real fix is in the attic, and you can see it yourself</h3>
+    <p>On a cold day, go up with a flashlight. The attic should feel close to the temperature outside. If it feels warm, heat is getting in. Look at the insulation. Dark, dirty patches mean air has been flowing through it for years, and the insulation has been filtering it like a furnace filter. Those are your leaks. Look up at the roof deck. Frost on the nail tips means warm, moist air is reaching it.</p>
+
+    <figure>
+      <img src="img/ep4-attic-flashlight.jpg" alt="View inside an attic from the hatch, a flashlight beam showing dark dirty patches on the insulation and frost on the nail tips above" loading="lazy" width="1280" height="714">
+      <figcaption>Dirty insulation marks the leaks. Frost on the nails means the warm air is reaching the roof.</figcaption>
+    </figure>
+
+    <p>Air sealing is a reasonable weekend project for a handy homeowner: foam and caulk around the pipes and wires, a sealed cover over the hatch. Adding insulation and fixing the eaves is usually a job for an insulation contractor. Start with an energy audit. That's what I did on my own house this spring. A home energy review found the leaks, an approved contractor did the work, and a utility rebate paid for part of it. Most utilities in cold states run a program like that, so check yours before you hire anyone.</p>
+
+    <h3>Your one thing this week</h3>
+    <p>After the next snowfall, walk out to the street the next morning and look at your own roof. Even white, you're in decent shape. Bare patches, melted stripes, or a crop of icicles: that's your heat leak. Then go up in the attic and look for the dirty insulation.</p>
+    <p>And if you only do one thing before winter really hits, weatherstrip and insulate the attic hatch. It's often the single biggest hole in the ceiling, and it costs about twenty dollars to fix.</p>
+
+    <div class="art-tools">
+      <h2>Things that help <span class="paid">(paid links)</span></h2>
+      <div class="products" id="art-products"></div>
+    </div>
+
+    <div class="funnel">
+      <a class="btn" href="#top"><span>Run the numbers on your attic</span><small>Calculator, top of page</small></a>
+      <a class="btn ghost" id="art-ep-link" href="#" rel="noopener"><span>Watch Episode 4 on YouTube</span><small>9 minutes</small></a>
+    </div>
+
+    <p class="art-fine">General education, not an inspection. Every house is different; check with a qualified contractor or energy auditor before making changes to your attic. The narration in the video is a synthetic clone of the author's voice.</p>
+  </article>
 
   <footer>
     <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8. R per inch uses the lower part of the published DOE ranges, so the tool errs toward adding a little more, not less. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
@@ -538,6 +681,26 @@ $("wid").addEventListener("input", e => { S.wid = +e.target.value || 0; render()
 $("cov").addEventListener("input", e => { const v = +e.target.value; S.cov = v > 0 ? v : null; render(); });
 links();
 render();
+
+/* ---------------- article extras ---------------- */
+(function () {
+  const pick = ["hatch", "foam", "rake", "thermal"];
+  const el = $("art-products");
+  if (el) el.innerHTML = pick.map(k => { const p = PRODUCTS[k]; return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="noopener sponsored">` +
+    `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`; }).join("");
+  const a = $("art-ep-link"); if (a) a.href = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
+  const play = $("video-play");
+  if (play) play.addEventListener("click", () => {
+    const m = (CONFIG.EP_URL || "").match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+    if (!m) { window.open(CONFIG.EP_URL || CONFIG.CHANNEL_URL, "_blank", "noopener"); return; }
+    const f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0";
+    f.title = "Episode 4: Why you get ice dams (and icicles)";
+    f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    f.allowFullscreen = true;
+    $("video").replaceChildren(f);
+  });
+})();
 </script>
 </body>
 </html>
