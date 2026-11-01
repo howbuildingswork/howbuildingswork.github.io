@@ -20,6 +20,13 @@
  ]}
 ]}
 </script>
+<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16.png">
+<link rel="icon" type="image/svg+xml" href="/brand/mark-compact.svg">
+<link rel="apple-touch-icon" href="/brand/favicon-512.png">
+<meta property="og:site_name" content="How Buildings Work">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://howbuildingswork.github.io/attic-insulation/img/ep4-ice-dam-section.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
@@ -177,12 +184,19 @@ footer p { margin: 0; max-width: 90ch; }
 .note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
 .paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
 footer a { color: var(--ink); }
+
+/* brand: logo mark in header, lockup in footer (see /brand/README.md) */
+.hbw-brandrow { display: flex; align-items: center; gap: 10px; }
+.hbw-mark { display: inline-flex; flex: none; line-height: 0; }
+.hbw-mark img { width: 40px; height: 40px; display: block; }
+.hbw-foot-lockup { display: inline-block; margin: 2px 0 10px; line-height: 0; }
+.hbw-foot-lockup img { width: 220px; max-width: 100%; height: auto; display: block; }
 </style>
 </head>
 <body>
 <div class="sheet" id="top">
   <header>
-    <div class="eyebrow"><a href="../">How Buildings Work · Free tools</a></div>
+    <div class="eyebrow hbw-brandrow"><a class="hbw-mark" href="/" aria-label="How Buildings Work home"><img src="/brand/mark-compact.svg" alt="" width="40" height="40"></a><a href="../">How Buildings Work · Free tools</a></div>
     <h1>How much attic insulation do I need?</h1>
     <p class="lede">Measure how deep your attic insulation is, pick what kind it is, and get your R-value, your target, and how many inches to add.</p>
   </header>
@@ -399,6 +413,7 @@ footer a { color: var(--ink); }
   </article>
 
   <footer>
+    <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
     <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8 (as of 2026). R per inch uses the lower part of the published DOE ranges, so the tool errs toward adding a little more, not less. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
     <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. Walk only on the joists, wear a mask, and keep insulation away from chimneys, flues and recessed lights that aren't rated for contact.</p>
@@ -710,5 +725,6 @@ render();
   });
 })();
 </script>
+<!-- analytics: cookieless counter goes here (HBWC-282) -->
 </body>
 </html>

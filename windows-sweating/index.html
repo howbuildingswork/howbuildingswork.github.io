@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Why Are My Windows Sweating?</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/brand/favicon-16.png">
+<link rel="icon" type="image/svg+xml" href="/brand/mark-compact.svg">
+<link rel="apple-touch-icon" href="/brand/favicon-512.png">
+<meta property="og:site_name" content="How Buildings Work">
+<meta property="og:image" content="https://howbuildingswork.github.io/brand/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://howbuildingswork.github.io/brand/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
@@ -175,12 +185,19 @@ footer a { color: var(--ink); }
 .note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
 .paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
 footer a { color: var(--ink); }
+
+/* brand: logo mark in header, lockup in footer (see /brand/README.md) */
+.hbw-brandrow { display: flex; align-items: center; gap: 10px; }
+.hbw-mark { display: inline-flex; flex: none; line-height: 0; }
+.hbw-mark img { width: 40px; height: 40px; display: block; }
+.hbw-foot-lockup { display: inline-block; margin: 2px 0 10px; line-height: 0; }
+.hbw-foot-lockup img { width: 220px; max-width: 100%; height: auto; display: block; }
 </style>
 </head>
 <body>
 <div class="sheet">
   <header>
-    <div class="eyebrow">How Buildings Work · Free tool</div>
+    <div class="eyebrow hbw-brandrow"><a class="hbw-mark" href="/" aria-label="How Buildings Work home"><img src="/brand/mark-compact.svg" alt="" width="40" height="40"></a>How Buildings Work · Free tool</div>
     <h1>Why are my windows sweating?</h1>
     <p class="lede">Tell it how cold it is and what windows you have. It gives you the highest indoor humidity your glass can take before it gets wet.</p>
   </header>
@@ -287,6 +304,7 @@ footer a { color: var(--ink); }
   </section>
 
   <footer>
+    <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
     <p>How it works: the limits come from the University of Minnesota's cold-climate table (W. J. Angell, "Indoor Winter Relative Humidity: What Is Acceptable?", Minnesota Extension Service, 1988), measured at 70°F inside with a 15 mph wind. The tool turns that table into a glass-surface temperature, so it still works when your thermostat isn't at 70. Deep window wells, closed blinds and heavy curtains keep warm air off the glass and make it sweat sooner.</p>
     <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. Rot, mold or water inside walls needs a professional.</p>
@@ -670,5 +688,6 @@ $("t-in-up").addEventListener("click", () => { S.tIn = Math.min(78, S.tIn + 1); 
 links();
 render();
 </script>
+<!-- analytics: cookieless counter goes here (HBWC-282) -->
 </body>
 </html>
