@@ -111,18 +111,6 @@ input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offs
 .figure svg { display: block; width: 100%; height: auto; }
 
 .fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-.products { display: grid; gap: 8px; }
-.product {
-  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
-  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
-  color: var(--ink); text-decoration: none; background: var(--paper);
-}
-.product:hover { background: rgba(37, 38, 42, 0.05); }
-.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-.product .pname { font-size: 15px; }
-.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
-.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-.paid { font-size: 11px; opacity: 0.7; }
 
 .funnel { display: grid; gap: 10px; }
 .btn {
@@ -158,7 +146,6 @@ footer p { margin: 0; max-width: 90ch; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
-.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
 footer a { color: var(--ink); }
 
 /* brand: logo mark in header, lockup in footer (see /brand/README.md) */
@@ -241,11 +228,6 @@ footer a { color: var(--ink); }
         <h2 id="fix-h">What to do</h2>
         <ol class="fixes" id="fixes" aria-labelledby="fix-h"></ol>
       </div>
-      <div id="products-wrap">
-        <h2>What helps <span class="paid">(paid links)</span></h2>
-        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
-        <div class="products" id="products" style="margin-top:8px"></div>
-      </div>
       <div class="funnel" id="funnel"></div>
     </section>
   </div>
@@ -264,7 +246,6 @@ footer a { color: var(--ink); }
   <footer>
     <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
     <p>How it works: sizes come from ENERGY STAR's recommended capacity ranges (as of 2026). Under 500 sq ft the tool uses the low end of the range; from 500 to 2,000 sq ft it uses the high end, because basements run cool and cool air cuts what any unit really removes; over 2,000 sq ft it scales up with area. Ceilings over 8 ft add proportionally. Then it picks the next common size: 22, 35 or 50 pints. Today's labels use the DOE's 2019 test, so an older "70-pint" unit is about a 50 on today's scale.</p>
-    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. The EPA suggests calling a professional for mold covering more than about 10 square feet.</p>
     <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
     <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
@@ -276,7 +257,6 @@ footer a { color: var(--ink); }
    SETTINGS: fill these in as things go live
 ------------------------------------------------------------------- */
 const CONFIG = {
-  AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
   EP_URL: "https://youtu.be/22YGYoxSjMY",      // "Why Your Basement Smells Musty"
   CHANNEL_URL: "https://www.youtube.com/@HowBuildingsWorkChannel",
   EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
@@ -303,22 +283,6 @@ const CONDS = {
 const HEIGHTS = { h7: { name: "7 ft", f: 1 }, h8: { name: "8 ft", f: 1 }, h9: { name: "9 ft", f: 9 / 8 }, h10: { name: "10 ft", f: 10 / 8 } };
 const SIZES = [22, 35, 50];
 
-function amazon(q) {
-  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
-  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
-}
-const PRODUCTS = {
-  d22:    { name: "22-pint dehumidifier", why: "Small and quiet, for a closet-size or lightly damp space.", q: "22 pint dehumidifier energy star" },
-  d35:    { name: "35-pint dehumidifier", why: "Mid-size. Look for ENERGY STAR and a hose outlet so you don't empty a bucket.", q: "35 pint dehumidifier energy star" },
-  d50:    { name: "50-pint dehumidifier", why: "The usual basement size on today's labels. Look for ENERGY STAR, auto-restart and a hose outlet.", q: "50 pint dehumidifier energy star" },
-  d50p:   { name: "50-pint dehumidifier with built-in pump", why: "Pumps the water up and out to a sink or window, so it works with no floor drain.", q: "50 pint dehumidifier with built in pump" },
-  whole:  { name: "Whole-basement dehumidifier", why: "A bigger, ducted or free-standing unit made to run all season in a large or wet basement.", q: "whole house basement dehumidifier" },
-  pump:   { name: "Condensate pump", why: "Add-on pump if your dehumidifier has a hose outlet but no drain nearby.", q: "condensate pump dehumidifier" },
-  hygro:  { name: "Digital hygrometer", why: "Check that the basement actually holds 50%. The dehumidifier's own reading is often off.", q: "digital hygrometer indoor" },
-  spout:  { name: "Downspout extensions", why: "Carry roof water 4 to 6 feet from the house, the cheapest fix for a wet basement.", q: "downspout extension" },
-  thermal:{ name: "Phone thermal camera", why: "Shows the cold, damp patches on basement walls and where outside air is leaking in.", q: "thermal camera for phone" }
-};
-
 const S = { cond: "very", len: 36, wid: 28, h: "h8", water: "no", drain: "yes", cool: "yes" };
 const $ = id => document.getElementById(id);
 const fmt = n => n.toLocaleString("en-US");
@@ -334,12 +298,6 @@ function chipsHTML(name, obj, cur, cls) {
   return Object.entries(obj).map(([k, v]) =>
     `<div class="chip ${cls || ""}"><input type="radio" name="${name}" id="${name}-${k}" value="${k}"${k === cur ? " checked" : ""}>` +
     `<label for="${name}-${k}">${v.name}${v.sub ? `<small>${v.sub}</small>` : ""}</label></div>`).join("");
-}
-
-function product(k) {
-  const p = PRODUCTS[k];
-  return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
-    `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
 }
 
 function render() {
@@ -410,17 +368,8 @@ function render() {
   );
   $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
 
-  let prods = [];
-  if (water) prods.push("spout");
-  if (!size) prods.push("whole", S.drain === "yes" ? "d50" : "d50p");
-  else if (size === 50) prods.push(S.drain === "yes" ? "d50" : "d50p");
-  else prods.push("d" + size);
-  if (S.drain === "no" && size && size < 50) prods.push("pump");
-  prods.push("hygro", "thermal");
-  $("products").innerHTML = prods.map(product).join("");
 
   $("fixes").parentElement.hidden = noArea;
-  $("products-wrap").hidden = noArea;
   if (noArea) {
     $("status").textContent = "Enter size";
     $("status").className = "status";

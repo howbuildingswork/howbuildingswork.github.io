@@ -146,18 +146,6 @@ input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offs
 
 .fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
 
-.products { display: grid; gap: 8px; }
-.product {
-  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
-  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
-  color: var(--ink); text-decoration: none; background: var(--paper);
-}
-.product:hover { background: rgba(37, 38, 42, 0.05); }
-.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-.product .pname { font-size: 15px; }
-.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
-.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-.paid { font-size: 11px; opacity: 0.7; }
 
 .funnel { display: grid; gap: 10px; }
 .btn {
@@ -183,7 +171,6 @@ footer a { color: var(--ink); }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
-.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
 footer a { color: var(--ink); }
 
 /* brand: logo mark in header, lockup in footer (see /brand/README.md) */
@@ -274,11 +261,6 @@ footer a { color: var(--ink); }
         <ul class="fixes" id="fixes" aria-labelledby="fix-h"></ul>
       </div>
 
-      <div id="products-wrap">
-        <h2>What helps <span class="paid">(paid links)</span></h2>
-        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
-        <div class="products" id="products" style="margin-top:8px"></div>
-      </div>
 
       <div class="funnel">
         <a class="btn" id="ep-link" href="#" rel="noopener">
@@ -306,7 +288,6 @@ footer a { color: var(--ink); }
   <footer>
     <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
     <p>How it works: the limits come from the University of Minnesota's cold-climate table (W. J. Angell, "Indoor Winter Relative Humidity: What Is Acceptable?", Minnesota Extension Service, 1988), measured at 70°F inside with a 15 mph wind. The tool turns that table into a glass-surface temperature, so it still works when your thermostat isn't at 70. Deep window wells, closed blinds and heavy curtains keep warm air off the glass and make it sweat sooner.</p>
-    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. Rot, mold or water inside walls needs a professional.</p>
     <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
     <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
@@ -318,7 +299,6 @@ footer a { color: var(--ink); }
    SETTINGS: fill these in as things go live
 ------------------------------------------------------------------- */
 const CONFIG = {
-  AMAZON_TAG: "howbuildingsw-20", // Amazon Associates tracking ID
   EP6_URL: "https://youtu.be/7RhpaUoJZ0I", // "Why Your Windows Sweat in Winter"
   CHANNEL_URL: "https://www.youtube.com/@HowBuildingsWorkChannel",
   EXPLORER_URL: ""     // House Anatomy Explorer sales page at launch
@@ -387,19 +367,6 @@ function sweatsBelow(win, tIn, rh) {
   }
   return null;
 }
-
-/* ---------------- products ---------------- */
-function amazon(q) {
-  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
-  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
-}
-const PRODUCTS = {
-  hygro:    { name: "Digital hygrometer", why: "Know your number. Set it in the room with the wet windows, not the hallway.", q: "digital hygrometer indoor" },
-  film:     { name: "Window insulation film kit", why: "Shrink film on the inside frame traps an air layer, so the surface you see stays warmer.", q: "window insulation film kit indoor" },
-  fan:      { name: "Bath fan timer switch", why: "Keeps the fan running 20 minutes after a shower so the steam leaves the house.", q: "bathroom exhaust fan timer switch" },
-  auto:     { name: "Automatic humidifier control", why: "For furnace humidifiers. An outdoor sensor turns the setting down as it gets colder, the same math as this tool.", q: "whole house humidifier automatic control outdoor sensor" },
-  humid:    { name: "Evaporative humidifier", why: "For one dry bedroom. Evaporative types don't leave white dust like ultrasonic ones can.", q: "evaporative humidifier" }
-};
 
 /* ---------------- state ---------------- */
 const S = { water: "inside", tOut: 0, win: "double", rh: 40, rhKnown: true, tIn: 70 };
@@ -543,7 +510,7 @@ function render() {
   status.textContent = labels[state];
   status.className = "status s-" + state;
 
-  let big = "", say = "", fixes = [], prods = [];
+  let big = "", say = "", fixes = [];
   const warm = tOut >= S.tIn - 2;
 
   if (state === "high") {
@@ -571,7 +538,6 @@ function render() {
       "Dry laundry in the dryer, and make sure the dryer vents outside.",
       "Wipe the sill dry. Standing water rots wood and grows mold."
     ];
-    prods = rh === null ? ["hygro", "fan", "auto", "film"] : ["fan", "auto", "film", "hygro"];
   } else if (state === "low") {
     if (target >= DRY) {
       big = `Room to go up to <span class="num">${target}%</span>`;
@@ -583,7 +549,6 @@ function render() {
           : `Stop at ${target}%. Past that, the windows start to sweat.`,
         "Check this again before a cold snap. The safe number drops with the temperature."
       ];
-      prods = ["humid", "hygro", "auto"];
     } else {
       big = `Your glass is the limit: <span class="num">${target}%</span>`;
       say = `You're at ${rh}% and it feels dry, but at ${tOut}°F these windows sweat above ${target}%. Adding humidity now just wets the glass. Warm the glass first.`;
@@ -592,7 +557,6 @@ function render() {
         "Keep blinds and curtains open a few inches at the bottom.",
         "Add humidity after the cold snap, when the safe number climbs back up."
       ];
-      prods = ["film", "hygro"];
     }
   } else if (state === "ok") {
     big = `You're fine under <span class="num">${target}%</span>`;
@@ -601,7 +565,6 @@ function render() {
       "Check this again when the forecast drops. The safe number falls about 5 points for every 10 degrees colder.",
       "Keep the bath fan and range hood habits going all winter."
     ];
-    prods = ["hygro", "auto"];
   } else if (state === "target") {
     big = warm ? `Keep it under <span class="num">${target}%</span>` : `Keep it under <span class="num">${target}%</span>`;
     say = `At ${tOut}°F, ${win.name.toLowerCase()} windows stay dry up to ${target}%. You don't know your humidity yet. A hygrometer tells you in a minute.`;
@@ -609,7 +572,6 @@ function render() {
       "Put a hygrometer in the room where windows sweat first.",
       "Check this again when the forecast drops. Colder nights mean a lower number."
     ];
-    prods = ["hygro", "auto"];
   } else if (state === "seal") {
     big = `Not a humidity problem`;
     say = `Fog or water between the panes means the glass unit's edge seal has failed and outside air got in. Turning down the humidity won't clear it, and it won't dry out on its own. The insulating gas has likely leaked out too, so that pane now loses more heat.`;
@@ -619,7 +581,6 @@ function render() {
       "If the frame is soft or rotted, or several units have failed, price a full replacement.",
       "Until then, it's a heat-loss and looks problem, not an emergency."
     ];
-    prods = [];
   } else if (state === "outside") {
     big = `Dew on the outside`;
     say = `Water on the outside of the glass is dew, the same as on your car. It shows up on cool, clear, still mornings when the glass holds your heat in well enough that the outer pane stays cold. It burns off with the sun.`;
@@ -627,7 +588,6 @@ function render() {
       "Nothing to fix. Good windows do this more than old ones.",
       "If water is also on the inside, switch to “inside of the glass.”"
     ];
-    prods = [];
   }
 
   $("big").innerHTML = big;
@@ -655,12 +615,6 @@ function render() {
   $("figure").innerHTML = windowSVG(glassDry ? "capdry" : state, S.win, tOut, S.tIn, ts, (state === "seal" || state === "outside") ? null : dew);
   $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
 
-  $("products-wrap").hidden = prods.length === 0;
-  $("products").innerHTML = prods.map(k => {
-    const p = PRODUCTS[k];
-    return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
-      `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
-  }).join("");
 
   renderTable(win);
 }

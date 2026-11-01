@@ -111,18 +111,6 @@ input[type="range"]:focus-visible { outline: 3px solid var(--blue); outline-offs
 .figure svg { display: block; width: 100%; height: auto; }
 
 .fixes { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-.products { display: grid; gap: 8px; }
-.product {
-  display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center;
-  border: 1.5px solid var(--ink); border-radius: 3px; padding: 10px 12px;
-  color: var(--ink); text-decoration: none; background: var(--paper);
-}
-.product:hover { background: rgba(37, 38, 42, 0.05); }
-.product:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-.product .pname { font-size: 15px; }
-.product .pwhy { grid-column: 1 / -1; font-size: 13px; opacity: 0.8; }
-.product .go { font-size: 12px; border: 1px solid var(--ink); padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-.paid { font-size: 11px; opacity: 0.7; }
 
 .funnel { display: grid; gap: 10px; }
 .btn {
@@ -160,7 +148,6 @@ td { vertical-align: top; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .note { margin: 0; max-width: 60ch; font-size: 12px; line-height: 1.4; opacity: 0.8; border-left: 2px solid currentColor; padding-left: 8px; }
-.paid-note { margin: 4px 0 0; font-size: 11px; opacity: 0.7; }
 footer a { color: var(--ink); }
 
 /* brand: logo mark in header, lockup in footer (see /brand/README.md) */
@@ -226,11 +213,6 @@ footer a { color: var(--ink); }
         <h2 id="fix-h">Before it gets cold</h2>
         <ol class="fixes" id="fixes" aria-labelledby="fix-h"></ol>
       </div>
-      <div id="products-wrap">
-        <h2>What helps <span class="paid">(paid links)</span></h2>
-        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
-        <div class="products" id="products" style="margin-top:8px"></div>
-      </div>
       <div class="funnel" id="funnel"></div>
     </section>
   </div>
@@ -246,11 +228,6 @@ footer a { color: var(--ink); }
       <p class="callout" id="o-callout"></p>
     </section>
     <section class="result-col panel">
-      <div id="o-products-wrap">
-        <h2>What helps <span class="paid">(paid links)</span></h2>
-        <p class="paid-note">As an Amazon Associate I earn from qualifying purchases.</p>
-        <div class="products" id="o-products" style="margin-top:8px"></div>
-      </div>
       <div class="funnel" id="o-funnel"></div>
     </section>
   </div>
@@ -258,7 +235,6 @@ footer a { color: var(--ink); }
   <footer>
     <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
     <p>How it works: research by the University of Illinois Building Research Council found that unprotected pipes in unheated spaces start to freeze when it's 20°F or colder outside, and sooner with wind or drafts. Pipes usually burst downstream of the ice, where pressure builds between the ice plug and a closed faucet, which is why a dripping faucet helps. Foam sleeves are counted in 6-foot lengths; heat cable is matched to the next common cable length at or above each run. Follow the cable's own instructions and plug it into a GFCI outlet.</p>
-    <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not a plumbing inspection. If water won't come out or a pipe has split, shut off the main and call a plumber.</p>
     <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
     <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
@@ -270,7 +246,6 @@ footer a { color: var(--ink); }
    SETTINGS: fill these in as things go live
 ------------------------------------------------------------------- */
 const CONFIG = {
-  AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
   EP_URL: "https://youtu.be/MuQJwwHvI0k",      // "Pipes Don't Burst Where They Freeze"
   CHANNEL_URL: "https://www.youtube.com/@HowBuildingsWorkChannel",
   EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
@@ -293,23 +268,6 @@ const LOCS = {
 const CABLE_LENGTHS = [3, 6, 9, 12, 15, 18, 24, 30, 40, 50, 60, 80, 100];
 const BIB_LENGTHS = [4, 6, 8, 10, 12, 14];
 const SLEEVE = 6;
-
-function amazon(q) {
-  const tag = CONFIG.AMAZON_TAG ? "&tag=" + encodeURIComponent(CONFIG.AMAZON_TAG) : "";
-  return "https://www.amazon.com/s?k=" + encodeURIComponent(q) + tag;
-}
-const PRODUCTS = {
-  foam12:  { name: "Foam pipe insulation, 1/2 in.", why: "Split foam that slips over 1/2 in. pipe. Tape the seams and the joints between pieces.", q: "foam pipe insulation 1/2 inch 6 ft" },
-  foam34:  { name: "Foam pipe insulation, 3/4 in.", why: "Same, sized for 3/4 in. pipe. Check the label: copper and PEX of the same size take different sleeves.", q: "foam pipe insulation 3/4 inch 6 ft" },
-  cable:   { name: "Pipe heat cable with thermostat", why: "Built-in thermostat turns it on only when the pipe gets near freezing. Match the length to the run.", q: "pipe heat cable with thermostat" },
-  bib:     { name: "Frost-free hose faucet", why: "The shutoff sits inside the warm wall, so the part outside drains dry. Length must reach past the wall.", q: "frost free sillcock" },
-  cover:   { name: "Outdoor faucet covers", why: "Cheap insulated caps for regular hose faucets. Disconnect the hose first.", q: "outdoor faucet cover winter" },
-  rimfoam: { name: "Spray foam for the rim joist", why: "Seals the drafty gaps at the sill plate and rim, the cold air that freezes basement pipes.", q: "spray foam insulation gaps and cracks" },
-  alarm:   { name: "Wi-Fi freeze alarm", why: "Texts your phone when the basement or crawl space gets close to freezing.", q: "wifi temperature sensor freeze alarm" },
-  leak:    { name: "Water leak detectors", why: "Puck-size sensors that alarm the moment water hits the floor under a sink or by the water heater.", q: "water leak detector wifi" },
-  shutoff: { name: "Smart water shutoff valve", why: "Shuts the main automatically when a leak sensor trips. The best protection while you're away.", q: "smart water shutoff valve" },
-  thermal: { name: "Phone thermal camera", why: "Finds the cold spots on outside walls and the drafts at the rim joist where pipes run.", q: "thermal camera for phone" }
-};
 
 const S = {
   mode: "protect",
@@ -378,11 +336,6 @@ function sectionSVG() {
   </svg>`;
 }
 
-function product(k) {
-  const p = PRODUCTS[k];
-  return `<a class="product" href="${amazon(p.q)}" target="_blank" rel="sponsored noopener">` +
-    `<span class="pname">${p.name}</span><span class="go">See options</span><span class="pwhy">${p.why}</span></a>`;
-}
 function funnel() {
   const ep = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
   let h = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Pipes don't burst where they freeze</span><small>${CONFIG.EP_URL ? "Episode 5" : "On the channel"}</small></a>`;
@@ -437,20 +390,11 @@ function renderProtect() {
     "Shut off and drain the hose faucets from inside, disconnect the hoses, and leave the outside valves open.",
     "In a cold snap: open cabinet doors under sinks on outside walls and let the farthest faucet drip."
   ].map(f => `<li>${f}</li>`).join("");
-  const prods = [];
-  if (ft["12"] > 0) prods.push("foam12");
-  if (ft["34"] > 0) prods.push("foam34");
-  if (cableRuns.length) prods.push("cable");
-  prods.push("rimfoam");
-  if (S.bibs > 0) prods.push("bib", "cover");
-  prods.push("alarm", "thermal");
-  $("products-wrap").hidden = false;
-  $("products").innerHTML = prods.map(product).join("");
   $("funnel").innerHTML = funnel();
 }
 
 function renderOther() {
-  let big, say, steps, callout, prods, status;
+  let big, say, steps, callout, status;
   if (S.mode === "frozen") {
     status = "Act fast";
     big = "Thaw it from the faucet back";
@@ -464,7 +408,6 @@ function renderOther() {
       "If you can't find it, can't reach it, or it has split: shut off the main and call a plumber."
     ];
     callout = "Never use a torch, propane heater or any open flame on a pipe. It can start a fire inside the wall. Keep electricity away from water.";
-    prods = ["leak", "alarm", "foam12"];
   } else {
     status = "Before you go";
     big = "Keep the heat on";
@@ -478,14 +421,12 @@ function renderOther() {
       "Leak sensors under sinks and by the water heater, or a smart shutoff valve, catch a burst before it floods."
     ];
     callout = "A furnace failure is the real risk. Check the furnace filter and get it serviced before winter if it's been a while.";
-    prods = ["alarm", "shutoff", "leak"];
   }
   $("o-status").textContent = status;
   $("o-big").textContent = big;
   $("o-say").textContent = say;
   $("o-steps").innerHTML = steps.map(s => `<li>${s}</li>`).join("");
   $("o-callout").textContent = callout;
-  $("o-products").innerHTML = prods.map(product).join("");
   $("o-funnel").innerHTML = funnel();
 }
 
