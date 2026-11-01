@@ -346,8 +346,11 @@ function render() {
   $("area-out").textContent = "= " + fmt(Math.round(area)) + " sq ft";
   const C = CONDS[S.cond];
   const newLoad = needAt(S.cond, area) * HEIGHTS[S.h].f;
-  const size = SIZES.find(s => s >= newLoad) || null;
-  const units = size ? 1 : Math.ceil(newLoad / 50);
+  const loadRounded = Math.round(newLoad);
+  const size = SIZES.find(s => s >= loadRounded) || null;
+  const units = size ? 1 : Math.ceil(loadRounded / 50);
+  const unitWords = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+  const noArea = area <= 0;
   const water = S.water === "yes";
 
   let state = water ? "water" : (size ? "size" : "big");
@@ -357,7 +360,7 @@ function render() {
 
   $("big").innerHTML = size
     ? `<span class="n">${size}-pint</span> dehumidifier`
-    : `Whole-basement unit, or <span class="n">${units} × 50</span>`;
+    : `You need <span class="n">${unitWords[units] || units} 50-pint</span> units`;
 
   $("facts").innerHTML = [
     ["ENERGY STAR range", area > 2000 ? `${C.large}+ pt/day` : `${C.band[0]}–${C.band[1]} pt/day`],
@@ -371,7 +374,7 @@ function render() {
 
   const cond = CONDS[S.cond].name.toLowerCase();
   let say = `ENERGY STAR's range for a ${cond} space ${area > 2000 ? "over" : "under"} 2,000 sq ft is ${area > 2000 ? C.large + "+" : C.band[0] + "–" + C.band[1]} pints a day. ${area < 500 ? "A small space like yours can use the low end" : area <= 2000 ? "A basement this size should buy for the high end, because cool basement air cuts what any unit really removes" : "At " + fmt(Math.round(area)) + " sq ft that scales to about " + Math.round(newLoad)}${HEIGHTS[S.h].f > 1 ? ", plus extra for the " + HEIGHTS[S.h].name + " ceiling" : ""}. `;
-  say += size ? `The next common size up is ${size} pints.` : `That's more than one 50-pint portable can keep up with.`;
+  say += size ? `The next common size up is ${size} pints.` : `That's more than one 50-pint portable can keep up with. Use ${unitWords[units] || units} 50-pint units, or one whole-basement unit.`;
   $("say").textContent = say;
 
   const co = $("callout");
@@ -407,6 +410,18 @@ function render() {
   if (S.drain === "no" && size && size < 50) prods.push("pump");
   prods.push("hygro", "thermal");
   $("products").innerHTML = prods.map(product).join("");
+
+  $("fixes").parentElement.hidden = noArea;
+  $("products-wrap").hidden = noArea;
+  if (noArea) {
+    $("status").textContent = "Enter size";
+    $("status").className = "status";
+    $("big").innerHTML = "Enter your basement's square footage";
+    $("facts").innerHTML = "";
+    $("gauge").innerHTML = "";
+    $("say").textContent = "Type the length and width of your basement above, in feet, and the answer will show up here.";
+    co.hidden = true;
+  }
 
   const ep = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
   $("funnel").innerHTML = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Why your basement smells musty</span><small>${CONFIG.EP_URL ? "Episode 7" : "On the channel"}</small></a>` +

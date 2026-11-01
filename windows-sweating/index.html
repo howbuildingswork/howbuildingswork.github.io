@@ -525,7 +525,8 @@ function decide() {
 }
 
 function render() {
-  const { win, target, rh, state } = decide();
+  const { win, line, target, rh, state } = decide();
+  const glassMax = Math.floor(line + 1e-6);
   const ts = glassTemp(win, S.tOut, S.tIn);
   const dew = rh !== null ? dewF(S.tIn, rh) : null;
   const below = rh !== null ? sweatsBelow(win, S.tIn, rh) : null;
@@ -546,7 +547,11 @@ function render() {
 
   if (state === "high") {
     big = `Keep it under <span class="num">${target}%</span>`;
-    if (rh !== null && rh > target) {
+    if (rh !== null && rh > target && rh <= glassMax) {
+      say = S.water === "inside"
+        ? `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so the numbers say it should stay dry. If it is wet, check the meter in that room. Keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`
+        : `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so it should stay dry. Keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`;
+    } else if (rh !== null && rh > target) {
       say = `You're at ${rh}%. At ${tOut}°F with ${win.name.toLowerCase()} windows, drop about ${rh - target} points and the glass dries up.`;
     } else if (rh !== null) {
       say = `Your meter says ${rh}%, under the line, but the glass is still wet. Check the meter in that room: bedrooms, baths and kitchens run wetter than the hallway. Closed blinds and heavy curtains also keep warm air off the glass.`;
@@ -568,7 +573,9 @@ function render() {
       say = `You're at ${rh}%. ENERGY STAR suggests 30–40% in cold climates, and at ${tOut}°F your glass stays dry up to ${target}%.`;
       fixes = [
         "Add moisture to the room you sleep in, not the whole house.",
-        `Stop at ${target}%. Past that, the windows start to sweat.`,
+        glassMax > CAP
+          ? `Your glass can handle about ${glassMax}%, but keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`
+          : `Stop at ${target}%. Past that, the windows start to sweat.`,
         "Check this again before a cold snap. The safe number drops with the temperature."
       ];
       prods = ["humid", "hygro", "auto"];

@@ -284,7 +284,7 @@ footer a { color: var(--ink); }
 
       <div class="funnel">
         <a class="btn" id="ep-link" href="#" rel="noopener">
-          <span>Watch: Why you get ice dams (and icicles)</span><small id="ep-note">Episode 4</small>
+          <span>Watch: Those icicles are costing you money</span><small id="ep-note">Episode 4</small>
         </a>
         <a class="btn ghost" href="#article"><span>Read: why ice dams start in the attic</span><small>7-minute read, below</small></a>
         <a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>
@@ -315,7 +315,7 @@ footer a { color: var(--ink); }
     </div>
 
     <div class="video" id="video">
-      <button class="video-poster" id="video-play" type="button" aria-label="Play Episode 4: Why you get ice dams (and icicles)">
+      <button class="video-poster" id="video-play" type="button" aria-label="Play Episode 4: Those Icicles Are Costing You Money">
         <img src="img/ep4-ice-dam-section.jpg" alt="House section with a warm red attic melting snow into an ice dam at the eave" loading="lazy" width="1280" height="714">
         <span class="play">▶&nbsp; Watch Episode 4 · 9 min</span>
       </button>
@@ -414,7 +414,7 @@ footer a { color: var(--ink); }
 
   <footer>
     <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
-    <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8 (as of 2026). R per inch uses the lower part of the published DOE ranges, so the tool errs toward adding a little more, not less. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
+    <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8 (as of 2026). R per inch uses mid-range DOE/NREL values for loose-fill insulation. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
     <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
     <p>General guidance, not an inspection. Walk only on the joists, wear a mask, and keep insulation away from chimneys, flues and recessed lights that aren't rated for contact.</p>
     <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
@@ -428,7 +428,7 @@ footer a { color: var(--ink); }
 ------------------------------------------------------------------- */
 const CONFIG = {
   AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
-  EP_URL: "https://youtu.be/WIH6uvSSIVs",      // "Why You Get Ice Dams (and Icicles)"
+  EP_URL: "https://youtu.be/WIH6uvSSIVs",      // "Those Icicles Are Costing You Money"
   CHANNEL_URL: "https://www.youtube.com/@HowBuildingsWorkChannel",
   EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
 };
@@ -439,8 +439,9 @@ const CONFIG = {
    existing homes (2021 IECC basis). Uninsulated attic: R30 zone 1,
    R49 zones 2-3, R60 zones 4-8; with 3-4 in. existing, add R25/R38/R49,
    which lands on the same totals.
-   R per inch: lower part of DOE ranges (loose-fill fiberglass/mineral
-   wool 2.2-2.9, cellulose 3.1-3.8, batts 2.9-3.8, vermiculite ~2.1).
+   R per inch: mid-range of DOE/NREL values (loose-fill fiberglass
+   2.2-2.7, cellulose 3.2-3.8, rock wool 3.0-3.3, batts 2.9-3.8,
+   vermiculite ~2.1).
    Cellulose settling ~20% (NREL loose-fill fact sheet).
 ------------------------------------------------------------------- */
 const ZONES = {
@@ -566,6 +567,7 @@ function compute() {
   const chartRow = CHART_ROWS.find(r => r >= needR) || 60;
   let state;
   if (S.type === "vermiculite") state = "stop";
+  else if (area <= 0) state = "area";
   else if (haveIn === 0) state = "none";
   else if (needR <= 2) state = S.dams === "yes" ? "leaks" : "ok";
   else state = "short";
@@ -579,7 +581,7 @@ function render() {
   $("depth-row").hidden = S.type === "none";
   $("area-out").textContent = "= " + fmt(Math.round(c.area)) + " sq ft";
 
-  const labels = { short: "Add more", none: "No insulation", ok: "You're there", leaks: "Air leaks", stop: "Stop: test first" };
+  const labels = { short: "Add more", none: "No insulation", ok: "You're there", leaks: "Air leaks", stop: "Stop: test first", area: "Enter size" };
   $("status").textContent = labels[c.state];
   $("status").className = "status s-" + c.state;
 
@@ -629,6 +631,9 @@ function render() {
       "For this winter's dams, rake the bottom of the roof from the ground."
     ];
     prods = ["foam", "fireblock", "hatch", "thermal", "rake"];
+  } else if (c.state === "area") {
+    big = `Enter your attic's square footage`;
+    say = "Type the length and width of your attic floor above, in feet, and the result will show up here.";
   } else if (c.state === "stop") {
     big = `Don't touch it yet`;
     say = "Vermiculite can contain asbestos. The EPA says to assume it might, leave it undisturbed, and have it tested or handled by a professional before any attic work.";
@@ -648,13 +653,15 @@ function render() {
   co.hidden = !callout;
   if (callout) { co.textContent = callout; co.className = "callout " + calloutClass; }
 
-  const facts = c.state === "stop" ? [] : [
+  const facts = c.state === "stop" || c.state === "area" ? [] : [
     ["You have", c.haveIn ? `R-${c.haveR}` : "R-0"],
     ["Target", `R-${c.target}`],
     ["Bags", c.bags !== null ? fmt(c.bags) : (c.needR > 2 ? `R-${c.chartRow} row` : "None")]
   ];
   $("facts").hidden = facts.length === 0;
   $("facts").innerHTML = facts.map(([k, v]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+  $("cov-hint").hidden = c.state === "stop";
+  $("fixes").parentElement.hidden = c.state === "area";
   $("cov-hint").textContent = c.needR > 2
     ? `Every brand's bag is different. On the bag's chart, find the R-${c.chartRow} row (the first row at or above the R-${c.needR} you're adding), read the square feet per bag, and type it here.`
     : "You don't need to add insulation, so no bags to count.";
@@ -718,7 +725,7 @@ render();
     if (!m) { window.open(CONFIG.EP_URL || CONFIG.CHANNEL_URL, "_blank", "noopener"); return; }
     const f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0";
-    f.title = "Episode 4: Why you get ice dams (and icicles)";
+    f.title = "Episode 4: Those Icicles Are Costing You Money";
     f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     f.allowFullscreen = true;
     $("video").replaceChildren(f);

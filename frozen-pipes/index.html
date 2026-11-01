@@ -271,7 +271,7 @@ footer a { color: var(--ink); }
 ------------------------------------------------------------------- */
 const CONFIG = {
   AMAZON_TAG: "howbuildingsw-20",              // Amazon Associates tracking ID
-  EP_URL: "https://youtu.be/MuQJwwHvI0k",      // "Why Your Pipes Freeze"
+  EP_URL: "https://youtu.be/MuQJwwHvI0k",      // "Pipes Don't Burst Where They Freeze"
   CHANNEL_URL: "https://www.youtube.com/@HowBuildingsWorkChannel",
   EXPLORER_URL: ""                              // House Anatomy Explorer sales page at launch
 };
@@ -385,7 +385,7 @@ function product(k) {
 }
 function funnel() {
   const ep = CONFIG.EP_URL || CONFIG.CHANNEL_URL;
-  let h = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Why your pipes freeze</span><small>${CONFIG.EP_URL ? "Episode 5" : "On the channel"}</small></a>`;
+  let h = `<a class="btn" href="${ep}" rel="noopener"><span>Watch: Pipes don't burst where they freeze</span><small>${CONFIG.EP_URL ? "Episode 5" : "On the channel"}</small></a>`;
   h += `<a class="btn ghost" href="../" rel="noopener"><span>More free tools</span><small>How Buildings Work</small></a>`;
   h += CONFIG.EXPLORER_URL
     ? `<a class="btn" href="${CONFIG.EXPLORER_URL}" rel="noopener"><span>Explore every layer of a house</span><small>House Anatomy Explorer</small></a>`
@@ -397,8 +397,10 @@ function renderProtect() {
   const runs = S.runs.filter(r => r.len > 0);
   const ft = { "12": 0, "34": 0 };
   let cableRuns = [], rows = [];
+  const sl = { "12": 0, "34": 0 };
   runs.forEach(r => {
     ft[r.size] += r.len;
+    sl[r.size] += Math.ceil(r.len / SLEEVE);
     const L = LOCS[r.loc];
     let buy = `${Math.ceil(r.len / SLEEVE)} × 6 ft sleeve`;
     if (L.cable) {
@@ -408,7 +410,7 @@ function renderProtect() {
     }
     rows.push(`<tr><td>${L.name}, ${r.size === "12" ? "1/2" : "3/4"} in., ${r.len} ft</td><td>${L.fix}</td><td>${buy}</td></tr>`);
   });
-  const sticks12 = Math.ceil(ft["12"] / SLEEVE), sticks34 = Math.ceil(ft["34"] / SLEEVE);
+  const sticks12 = sl["12"], sticks34 = sl["34"];
   const totalFt = ft["12"] + ft["34"];
   const bibLen = BIB_LENGTHS.find(x => x >= S.wall) || null;
 
@@ -456,6 +458,7 @@ function renderOther() {
     steps = [
       "Open the faucet that pipe feeds, hot and cold. Moving water helps melt the ice and relieves pressure.",
       "Find the cold section: outside walls, the rim joist, under the sink on an outside wall.",
+      "Safety first: never use a heat gun, torch or open flame on a pipe. Keep electric heaters and dryers away from standing water. If a pipe has already split or water is on the floor, shut off the main valve first.",
       "Warm it starting near the faucet and work back toward the ice: hair dryer, heat lamp, or warm towels. Keep a space heater well clear of anything that burns.",
       "Keep warming until full flow comes back, then check the whole run for drips.",
       "If you can't find it, can't reach it, or it has split: shut off the main and call a plumber."
