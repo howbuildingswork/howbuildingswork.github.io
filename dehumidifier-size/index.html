@@ -231,6 +231,7 @@ footer a { color: var(--ink); }
       <h2 id="res-h">The answer</h2>
       <span class="status" id="status"></span>
       <p class="big" id="big"></p>
+      <p class="say" id="big-sub" hidden></p>
       <p class="note"><strong>Estimate, not an inspection or design.</strong> Based on ENERGY STAR capacity range data shown below; your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
       <div class="facts" id="facts"></div>
       <div class="gauge" id="gauge"></div>
@@ -346,10 +347,9 @@ function render() {
   $("area-out").textContent = "= " + fmt(Math.round(area)) + " sq ft";
   const C = CONDS[S.cond];
   const newLoad = needAt(S.cond, area) * HEIGHTS[S.h].f;
-  const loadRounded = Math.round(newLoad);
-  const size = SIZES.find(s => s >= loadRounded) || null;
-  const units = size ? 1 : Math.ceil(loadRounded / 50);
-  const unitWords = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+  const nearLimit = newLoad > 45 && newLoad <= 55;
+  const size = SIZES.find(s => s >= newLoad) || (nearLimit ? 50 : null);
+  const units = size ? 1 : Math.ceil(newLoad / 50);
   const noArea = area <= 0;
   const water = S.water === "yes";
 
@@ -360,7 +360,12 @@ function render() {
 
   $("big").innerHTML = size
     ? `<span class="n">${size}-pint</span> dehumidifier`
-    : `You need <span class="n">${unitWords[units] || units} 50-pint</span> units`;
+    : `Whole-basement unit, or <span class="n">${units}&nbsp;×&nbsp;50</span>`;
+  const sub = size
+    ? (nearLimit ? "One 50-pint unit will run near its limit here. Two units, or one whole-basement unit, gives you headroom." : "")
+    : `Buy two 50-pint units${units > 2 ? " or more (" + units + " in all)" : ""}, or one whole-basement unit. One 50-pint unit can't keep up.${area > 3000 ? " Over about 3,000 sq ft, have a contractor size a whole-house unit." : ""}`;
+  $("big-sub").textContent = sub;
+  $("big-sub").hidden = !sub;
 
   $("facts").innerHTML = [
     ["ENERGY STAR range", area > 2000 ? `${C.large}+ pt/day` : `${C.band[0]}–${C.band[1]} pt/day`],
@@ -374,7 +379,7 @@ function render() {
 
   const cond = CONDS[S.cond].name.toLowerCase();
   let say = `ENERGY STAR's range for a ${cond} space ${area > 2000 ? "over" : "under"} 2,000 sq ft is ${area > 2000 ? C.large + "+" : C.band[0] + "–" + C.band[1]} pints a day. ${area < 500 ? "A small space like yours can use the low end" : area <= 2000 ? "A basement this size should buy for the high end, because cool basement air cuts what any unit really removes" : "At " + fmt(Math.round(area)) + " sq ft that scales to about " + Math.round(newLoad)}${HEIGHTS[S.h].f > 1 ? ", plus extra for the " + HEIGHTS[S.h].name + " ceiling" : ""}. `;
-  say += size ? `The next common size up is ${size} pints.` : `That's more than one 50-pint portable can keep up with. Use ${unitWords[units] || units} 50-pint units, or one whole-basement unit.`;
+  say += size ? `The next common size up is ${size} pints.` : `That's more than one 50-pint portable can keep up with.`;
   $("say").textContent = say;
 
   const co = $("callout");
@@ -417,6 +422,7 @@ function render() {
     $("status").textContent = "Enter size";
     $("status").className = "status";
     $("big").innerHTML = "Enter your basement's square footage";
+    $("big-sub").hidden = true;
     $("facts").innerHTML = "";
     $("gauge").innerHTML = "";
     $("say").textContent = "Type the length and width of your basement above, in feet, and the answer will show up here.";
@@ -439,8 +445,8 @@ $("heights").innerHTML = chipsHTML("h", HEIGHTS, S.h);
 $("conds").addEventListener("change", e => { S.cond = e.target.value; render(); });
 $("heights").addEventListener("change", e => { S.h = e.target.value; render(); });
 ["water", "drain", "cool"].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.addEventListener("change", e => { S[n] = e.target.value; render(); })));
-$("len").addEventListener("input", e => { S.len = +e.target.value || 0; render(); });
-$("wid").addEventListener("input", e => { S.wid = +e.target.value || 0; render(); });
+$("len").addEventListener("input", e => { S.len = Math.min(200, Math.max(0, +e.target.value || 0)); render(); });
+$("wid").addEventListener("input", e => { S.wid = Math.min(200, Math.max(0, +e.target.value || 0)); render(); });
 render();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "268a9b815a764c6aac10cf67a51cdbca"}'></script><!-- End Cloudflare Web Analytics -->

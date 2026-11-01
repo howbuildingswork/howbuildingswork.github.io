@@ -286,9 +286,9 @@ const CONFIG = {
 const LOCS = {
   rim:     { name: "Rim joist / sill", cable: false, fix: "Seal and insulate the rim, then sleeve the pipe" },
   wall:    { name: "Outside wall",     cable: false, fix: "Insulation between pipe and outside; open cabinet doors in a cold snap" },
-  crawl:   { name: "Crawl space",      cable: true,  fix: "Heat cable plus foam sleeve" },
-  garage:  { name: "Unheated garage",  cable: true,  fix: "Heat cable plus foam sleeve" },
-  attic:   { name: "Attic",            cable: true,  fix: "Heat cable plus foam sleeve, buried under attic insulation" }
+  crawl:   { name: "Crawl space",      cable: true,  fix: "Heat cable (cover it only as its instructions allow) plus a foam sleeve" },
+  garage:  { name: "Unheated garage",  cable: true,  fix: "Heat cable (cover it only as its instructions allow) plus a foam sleeve" },
+  attic:   { name: "Attic",            cable: true,  fix: "Heat cable plus a foam sleeve, then bury under attic insulation only if the cable is rated for it" }
 };
 const CABLE_LENGTHS = [3, 6, 9, 12, 15, 18, 24, 30, 40, 50, 60, 80, 100];
 const BIB_LENGTHS = [4, 6, 8, 10, 12, 14];
@@ -420,7 +420,7 @@ function renderProtect() {
   $("facts").innerHTML = [
     ["Foam sleeves", `${sticks12 + sticks34}`],
     ["Heat cables", `${cableRuns.length}`],
-    ["Hose faucets", S.bibs > 0 ? (bibLen ? `${bibLen} in.` : "14 in.+") : "None"]
+    ["Hose faucets", S.bibs > 0 ? (bibLen ? `${bibLen} in.` : "Ask a plumber") : "None"]
   ].map(([k, v]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
   $("figure").innerHTML = sectionSVG();
   $("say").textContent = runs.length
@@ -456,14 +456,14 @@ function renderOther() {
     big = "Thaw it from the faucet back";
     say = "A trickle or nothing from a faucet in cold weather means ice in the line. The goal is to relieve the pressure first, then warm the pipe slowly.";
     steps = [
+      "Safety first. Never use a torch, heat gun or open flame on a pipe. Keep hair dryers, heat lamps and cords away from standing or dripping water, and plug them into a GFCI outlet. If a pipe has split or water is near outlets or the electrical panel, stay out of the water, shut off the main water valve, and call a plumber or an electrician.",
       "Open the faucet that pipe feeds, hot and cold. Moving water helps melt the ice and relieves pressure.",
       "Find the cold section: outside walls, the rim joist, under the sink on an outside wall.",
-      "Safety first: never use a heat gun, torch or open flame on a pipe. Keep electric heaters and dryers away from standing water. If a pipe has already split or water is on the floor, shut off the main valve first.",
       "Warm it starting near the faucet and work back toward the ice: hair dryer, heat lamp, or warm towels. Keep a space heater well clear of anything that burns.",
       "Keep warming until full flow comes back, then check the whole run for drips.",
       "If you can't find it, can't reach it, or it has split: shut off the main and call a plumber."
     ];
-    callout = "Never use a torch, propane heater or any open flame on a pipe. It can start a fire inside the wall.";
+    callout = "Never use a torch, propane heater or any open flame on a pipe. It can start a fire inside the wall. Keep electricity away from water.";
     prods = ["leak", "alarm", "foam12"];
   } else {
     status = "Before you go";
@@ -519,7 +519,7 @@ $("add-run").addEventListener("click", () => {
   const last = document.getElementById("len-" + (S.runs.length - 1)); if (last) last.focus();
 });
 $("bibs").addEventListener("input", e => { S.bibs = Math.max(0, Math.round(+e.target.value || 0)); render(); });
-$("wall").addEventListener("input", e => { S.wall = +e.target.value || 0; render(); });
+$("wall").addEventListener("input", e => { S.wall = Math.min(20, Math.max(2, +e.target.value || 2)); render(); });
 render();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "268a9b815a764c6aac10cf67a51cdbca"}'></script><!-- End Cloudflare Web Analytics -->

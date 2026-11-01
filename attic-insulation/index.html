@@ -315,7 +315,7 @@ footer a { color: var(--ink); }
     </div>
 
     <div class="video" id="video">
-      <button class="video-poster" id="video-play" type="button" aria-label="Play Episode 4: Those Icicles Are Costing You Money">
+      <button class="video-poster" id="video-play" type="button" aria-label="Play Episode 4: Those Icicles Are Costing You Money (Ice Dams Explained)">
         <img src="img/ep4-ice-dam-section.jpg" alt="House section with a warm red attic melting snow into an ice dam at the eave" loading="lazy" width="1280" height="714">
         <span class="play">▶&nbsp; Watch Episode 4 · 9 min</span>
       </button>
@@ -325,7 +325,7 @@ footer a { color: var(--ink); }
     <p>Here's the part most people get wrong. Ice dams aren't a roof problem. They start in the attic. Call a roofer and you'll get a new roof that does the same thing next winter. If you live anywhere it snows, and especially if your house was built before the 1990s, here is how an ice dam forms, where the heat is sneaking out of your house, and the fixes in the order that actually works.</p>
 
     <figure>
-      <img src="img/ep4-icicles.jpg" alt="Hand-drawn sketch of a house eave in winter with a row of long icicles hanging from the gutter" loading="lazy" width="1280" height="714">
+      <img src="img/ep4-icicles.jpg" alt="Sketch of a house eave in winter with a row of long icicles hanging from the gutter" loading="lazy" width="1280" height="714">
       <figcaption>Icicles are the overflow. The dam that made them is sitting on the roof edge behind them.</figcaption>
     </figure>
 
@@ -361,7 +361,7 @@ footer a { color: var(--ink); }
       <figcaption>The holes in your ceiling. Insulation piled on top of these just filters the warm air on its way out.</figcaption>
     </figure>
 
-    <p><strong>Two: not enough insulation.</strong> A lot of older houses have six inches or less up there, sometimes less than that, packed down and dirty after decades. Current code for new homes in Minnesota calls for at least R-49, which is roughly fifteen to eighteen inches of blown insulation (as of 2026). If you can see the tops of your ceiling joists, you don't have enough. <a href="#top">The calculator at the top of this page</a> turns your depth and insulation type into an R-value and tells you how many inches to add.</p>
+    <p><strong>Two: not enough insulation.</strong> A lot of older houses have six inches or less up there, sometimes less than that, packed down and dirty after decades. Current code for new homes in Minnesota calls for at least R-49, which is roughly 15 inches of blown cellulose or about 20 of blown fiberglass (as of 2026). If you can see the tops of your ceiling joists, you don't have enough. <a href="#top">The calculator at the top of this page</a> turns your depth and insulation type into an R-value and tells you how many inches to add.</p>
 
     <figure>
       <img src="img/ep4-insulation-depth.jpg" alt="Two cut views of an attic floor with rulers: a thin compressed layer barely covering the joists next to a deep fluffy layer well above them" loading="lazy" width="1280" height="714">
@@ -414,9 +414,9 @@ footer a { color: var(--ink); }
 
   <footer>
     <a class="hbw-foot-lockup" href="/" aria-label="How Buildings Work home"><img src="/brand/lockup-horizontal.svg" alt="How Buildings Work. Know your house." width="220" height="42"></a>
-    <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8 (as of 2026). R per inch uses mid-range DOE/NREL values for loose-fill insulation. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
+    <p>How it works: targets are ENERGY STAR's attic levels for existing homes (based on the 2021 IECC): R-30 in zone 1, R-49 in zones 2–3, R-60 in zones 4–8 (as of 2026). R per inch uses typical values from the DOE/NREL ranges. Cellulose settles about 20%, so blow about 20% deeper than the settled depth (NREL). Your bag's own chart always wins.</p>
     <p>As an Amazon Associate I earn from qualifying purchases. Product links open an Amazon search, not one brand.</p>
-    <p>General guidance, not an inspection. Walk only on the joists, wear a mask, and keep insulation away from chimneys, flues and recessed lights that aren't rated for contact.</p>
+    <p>General guidance, not an inspection. Walk only on the joists, wear a mask, and keep insulation away from chimneys, flues and recessed lights that aren't rated for contact. If you see old knob-and-tube wiring (wires on ceramic knobs), don't cover it; have an electrician look first. Use a ladder that reaches the hatch with three points of contact, and bring a light and a board to kneel on.</p>
     <p>Estimate, not an inspection or design. Your house, local code and product labels can differ. Check with your local building official and a qualified contractor before you buy or build. Codes vary by city and change.</p>
     <p><a href="../privacy/">Privacy &amp; disclosures</a></p>
   </footer>
@@ -439,9 +439,9 @@ const CONFIG = {
    existing homes (2021 IECC basis). Uninsulated attic: R30 zone 1,
    R49 zones 2-3, R60 zones 4-8; with 3-4 in. existing, add R25/R38/R49,
    which lands on the same totals.
-   R per inch: mid-range of DOE/NREL values (loose-fill fiberglass
-   2.2-2.7, cellulose 3.2-3.8, rock wool 3.0-3.3, batts 2.9-3.8,
-   vermiculite ~2.1).
+   R per inch: typical values from the DOE/NREL ranges (loose-fill
+   fiberglass 2.2-2.7 -> 2.5, cellulose 3.2-3.8 -> 3.2, rock wool
+   3.0-3.3 -> 2.8, batts 2.9-3.8 -> 3.1, vermiculite ~2.1). Not mid-range.
    Cellulose settling ~20% (NREL loose-fill fact sheet).
 ------------------------------------------------------------------- */
 const ZONES = {
@@ -604,12 +604,13 @@ function render() {
       "Put a baffle in every rafter bay at the eaves so the soffit vents stay open.",
       "Weatherstrip and insulate the attic hatch.",
       `Staple depth rulers to the joists, then blow ${add} in. of ${c.ad.name.toLowerCase()}.`,
-      "Keep insulation back from the chimney, flues and any recessed light not rated for contact."
+      "Keep insulation back from the chimney, flues and any recessed light not rated for contact.",
+      "If you see old knob-and-tube wiring (wires on ceramic knobs), don't cover it; have an electrician look first."
     ];
     prods = S.dams === "yes" ? ["foam", "baffles", "hatch", "rulers", "thermal", "rake"] : ["foam", "baffles", "rulers", "hatch", "thermal"];
   } else if (c.state === "ok") {
     big = `About <span class="n">R-${c.haveR}</span>`;
-    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} meets the R-${c.target} target. Adding more won't pay you back much.`;
+    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} ${c.haveR < c.target ? `is within R-2 of the R-${c.target} target` : `meets the R-${c.target} target`}. Adding more won't pay you back much.`;
     callout = "Check the eaves: insulation should not block the soffit vents, and every bay should have a baffle.";
     calloutClass = "green";
     fixes = [
@@ -620,7 +621,7 @@ function render() {
     prods = ["thermal", "hatch"];
   } else if (c.state === "leaks") {
     big = `Depth isn't your problem`;
-    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} is about R-${c.haveR}, at the R-${c.target} target. If you still get ice dams, warm air is getting past the insulation. Insulation slows heat, but it doesn't stop air.`;
+    say = `${c.haveIn} in. of ${c.ty.name.toLowerCase()} is about R-${c.haveR}, ${c.haveR < c.target ? `within R-2 of the R-${c.target} target` : `at the R-${c.target} target`}. If you still get ice dams, warm air is getting past the insulation. Insulation slows heat, but it doesn't stop air.`;
     callout = "Look for the leaks: dark, dirty spots in the insulation (air carries dust through it), frost on roof nails over a room, the hatch, recessed lights and the bath fan duct.";
     calloutClass = "blue";
     fixes = [
@@ -725,7 +726,7 @@ render();
     if (!m) { window.open(CONFIG.EP_URL || CONFIG.CHANNEL_URL, "_blank", "noopener"); return; }
     const f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0";
-    f.title = "Episode 4: Those Icicles Are Costing You Money";
+    f.title = "Episode 4: Those Icicles Are Costing You Money (Ice Dams Explained)";
     f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     f.allowFullscreen = true;
     $("video").replaceChildren(f);

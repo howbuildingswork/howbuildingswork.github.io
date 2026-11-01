@@ -527,6 +527,7 @@ function decide() {
 function render() {
   const { win, line, target, rh, state } = decide();
   const glassMax = Math.floor(line + 1e-6);
+  const glassDry = state === "high" && rh !== null && rh > target && rh <= glassMax;
   const ts = glassTemp(win, S.tOut, S.tIn);
   const dew = rh !== null ? dewF(S.tIn, rh) : null;
   const below = rh !== null ? sweatsBelow(win, S.tIn, rh) : null;
@@ -538,7 +539,7 @@ function render() {
   $("t-in-read").textContent = S.tIn + "°F";
 
   const status = $("status");
-  const labels = { high: "Too humid", low: "Too dry", ok: "In the zone", target: "Your number", seal: "Seal failed", outside: "That's normal" };
+  const labels = { high: glassDry ? "Glass OK, house humid" : "Too humid", low: "Too dry", ok: "In the zone", target: "Your number", seal: "Seal failed", outside: "That's normal" };
   status.textContent = labels[state];
   status.className = "status s-" + state;
 
@@ -549,14 +550,18 @@ function render() {
     big = `Keep it under <span class="num">${target}%</span>`;
     if (rh !== null && rh > target && rh <= glassMax) {
       say = S.water === "inside"
-        ? `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so the numbers say it should stay dry. If it is wet, check the meter in that room. Keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`
-        : `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so it should stay dry. Keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`;
+        ? `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so the numbers say it should stay dry. If it is wet, check the meter in that room. Keep the house at or below ${CAP}% anyway. Above 50%, dust mites thrive, and mold gets a foothold in cool corners.`
+        : `You're at ${rh}%. At ${tOut}°F your ${win.name.toLowerCase()} glass can handle about ${glassMax}%, so it should stay dry. Keep the house at or below ${CAP}% anyway. Above 50%, dust mites thrive, and mold gets a foothold in cool corners.`;
     } else if (rh !== null && rh > target) {
       say = `You're at ${rh}%. At ${tOut}°F with ${win.name.toLowerCase()} windows, drop about ${rh - target} points and the glass dries up.`;
     } else if (rh !== null) {
       say = `Your meter says ${rh}%, under the line, but the glass is still wet. Check the meter in that room: bedrooms, baths and kitchens run wetter than the hallway. Closed blinds and heavy curtains also keep warm air off the glass.`;
     } else {
       say = `At ${tOut}°F, ${win.name.toLowerCase()} windows get wet above ${target}%. If yours are wet, you're over it. A hygrometer tells you by how much.`;
+    }
+    if (target < 15) {
+      big = `Your glass is the limit`;
+      say = `Single glass sweats at almost any humidity this cold. Add a storm window or film, then aim for 30%.`;
     }
     fixes = [
       "Run the bath fan during showers and 20 minutes after.",
@@ -574,7 +579,7 @@ function render() {
       fixes = [
         "Add moisture to the room you sleep in, not the whole house.",
         glassMax > CAP
-          ? `Your glass can handle about ${glassMax}%, but keep the house at or below ${CAP}% anyway. Above that, mold and dust mites thrive.`
+          ? `Your glass can handle about ${glassMax}%, but stay at 40–${CAP}% at most. Above 50%, dust mites thrive, and mold gets a foothold in cool corners.`
           : `Stop at ${target}%. Past that, the windows start to sweat.`,
         "Check this again before a cold snap. The safe number drops with the temperature."
       ];
@@ -647,7 +652,7 @@ function render() {
   $("meter").hidden = !showMeter;
   if (showMeter) meter(rh, target);
 
-  $("figure").innerHTML = windowSVG(state, S.win, tOut, S.tIn, ts, (state === "seal" || state === "outside") ? null : dew);
+  $("figure").innerHTML = windowSVG(glassDry ? "capdry" : state, S.win, tOut, S.tIn, ts, (state === "seal" || state === "outside") ? null : dew);
   $("fixes").innerHTML = fixes.map(f => `<li>${f}</li>`).join("");
 
   $("products-wrap").hidden = prods.length === 0;
